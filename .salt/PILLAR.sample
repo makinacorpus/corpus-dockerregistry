@@ -29,7 +29,7 @@ makina-projects.projectname:
         from: "{user}@{fqdn}"
         to: ["{user}@{fqdn}"]
     host: localhost
-    port: 50000
+    port: 5000
     domain: "registry.docker.tld"
     server_aliases: []
     conf: "{data_root}/configuration"
@@ -48,6 +48,7 @@ makina-projects.projectname:
     #         --- END ...
     htaccess: "{data_root}/configuration/registry.webaccess"
     force_ssl: true
+    changeset: "v2.1.1"
     configs:
       "registry.yml":
         source: "salt://makina-projects/{name}/files/registry.yml"

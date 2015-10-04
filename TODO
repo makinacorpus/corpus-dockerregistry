@@ -1,0 +1,4 @@
+* fix redis startup
+* test registry push/pull
+* think to pillar overwriting during docker start/reconf
+* install registry somewhere on makna cluster

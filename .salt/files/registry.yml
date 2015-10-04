@@ -39,6 +39,9 @@ storage:
     maintenance:
       uploadpurging:
         enabled: {{data.registry.purging}}
+        age: 168h
+        interval: 24h
+        dryrun: false
 http:
     addr: "{{data.registry.addr}}"
     debug:

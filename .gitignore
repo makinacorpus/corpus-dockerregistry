@@ -1,3 +1,5 @@
 /distribution/
 registry-v*.xz
 registry-v*.xz.md5
+/registry
+/registry.xz
