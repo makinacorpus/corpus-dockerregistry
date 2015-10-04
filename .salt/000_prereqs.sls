@@ -1,16 +1,12 @@
 {% set cfg = opts.ms_project %}
 {% set data = cfg.data %}
-{{cfg.name}}-www-data:
-  user.present:
-    - name: www-data
-    - optional_groups:
-      - {{cfg.group}}
-    - remove_groups: false
+include:
+  - makina-states.services.monitoring.circus
+  - makina-states.services.http.nginx
+  - makina-states.services.db.redis
 
 prepreqs-{{cfg.name}}:
   pkg.installed:
-    - watch:
-      - user: {{cfg.name}}-www-data
     - pkgs:
       - apache2-utils
       - librados-dev
@@ -22,8 +18,28 @@ prepreqs-{{cfg.name}}:
     - group: {{cfg.group}}
     - watch:
       - pkg: prepreqs-{{cfg.name}}
-      - user: {{cfg.name}}-www-data
     - names:
       - {{cfg.data.conf}}
       - {{cfg.data.images}}
       - {{cfg.data.www_dir}}
+
+conf-redis:
+  file.managed:
+    - name: /srv/pillar/redis.sls
+    - contents: |
+                makina-states.services.db.redis.redis.bind: 127.0.0.1
+    - user: root
+    - group: root
+    - reload_pillar: true
+    - mode: 750
+
+add-custom-pillar:
+  file.append:
+    - name: /srv/pillar/top.sls
+    - text: "    - redis"
+    - onlyif: grep -v redis /srv/pillar/top.sls
+    - reload_pillar: true
+    - watch:
+      - file: conf-redis
+    - watch_in:
+      - mc_proxy: redis-pre-conf

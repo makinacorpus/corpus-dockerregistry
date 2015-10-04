@@ -3,9 +3,17 @@
 {% import "makina-states/services/http/nginx/init.sls" as nginx %}
 {% import "makina-states/services/monitoring/circus/macros.jinja" as circus with context %}
 
+{# scramble the redis password upon each reconfiguration to avoid
+   multiple docker images sharing the same root password, when
+   we restart, the password change #}
+{% do salt['mc_utils.purge_memoize_cache']() %}
+{% do salt['mc_redis.change_password']() %}
+
 include:
   - makina-states.services.http.nginx.hooks
   - makina-states.services.monitoring.circus.hooks
+  # reconfigure password
+  - makina-states.services.db.redis.configuration
 
 {{ nginx.virtualhost(domain=data.domain,
                      doc_root=data.www_dir,
@@ -18,7 +26,6 @@ include:
                      vh_content_source=data.nginx_vhost,
                      project=cfg.name)}}
 
-
 {% set circus_data = {
   'cmd': '{cfg[project_root]}/registry'.format(cfg=cfg, data=cfg.data),
   'environment': {},
@@ -29,7 +36,6 @@ include:
   'warmup_delay': "10",
   'max_age': 24*60*60} %}
 {{ circus.circusAddWatcher(cfg.name+'-registry', **circus_data) }}
-
 
 {{cfg.name}}-configs-before:
   mc_proxy.hook:
@@ -76,6 +82,7 @@ include:
     - watch_in:
       - mc_proxy: {{cfg.name}}-configs-post
     - watch:
+      - mc_proxy: redis-post-conf
       - mc_proxy: {{cfg.name}}-configs-pre
     - defaults:
         project: "{{cfg.name}}"
@@ -104,3 +111,10 @@ include:
 
 {{cfg.name}}-configs-after:
   mc_proxy.hook: []
+
+{{cfg.name}}-www-data:
+  user.present:
+    - name: www-data
+    - optional_groups:
+      - {{cfg.group}}
+    - remove_groups: false

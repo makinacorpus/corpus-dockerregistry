@@ -1,10 +1,8 @@
-{% set cfg = salt['mc_project.get_configuration'](name) %}
-{{cfg}}
+{% set cfg = salt['mc_project.get_configuration'](project) %}
 {% set data = cfg.data %}
-{#
 version: 0.1
 log:
-  level: {{data.level}}
+  level: {{data.registry.level}}
   fields:
     service: registry
     environment: development
@@ -12,7 +10,7 @@ log:
     - type: mail
       disabled: {{data.registry.mail.smtp.disabled}}
       levels:
-        {% for l in data.registry.mail.levels() %}
+        {% for l in data.registry.mail.levels %}
         - {{l}}
         {% endfor %}
         # levels placeholder
@@ -25,7 +23,7 @@ log:
           #username: mailuser
           #password: password
           #insecure: true
-        from: {{data.registry.mail.smtp.from}}
+        from: {{data.registry.mail.from}}
         to:
           {% for t in data.registry.mail.to %}
           - {{t}}
@@ -47,9 +45,9 @@ http:
       addr: "{{data.registry.debug_addr}}"
     headers:
         X-Content-Type-Options: [nosniff]
-{% if data.registry.redis %}
 redis:
-  addr: "{{data.registry.redis.addr}}"
+  addr: "localhost:6379"
+  password: "{{salt['mc_redis.settings']().redis.requirepass}}"
   pool:
     maxidle: 16
     maxactive: 64
@@ -57,7 +55,6 @@ redis:
   dialtimeout: 10ms
   readtimeout: 10ms
   writetimeout: 10ms
-{% endif %}
 #notifications:
 #    endpoints:
 #        - name: local-5003
@@ -79,4 +76,4 @@ redis:
 #    enabled: true
 #    interval: 10s
 #    threshold: 3
-#}
+# vim: set et:

@@ -2,7 +2,7 @@
 {% set data = cfg.data %}
 
 include:
-  - makina-states.services.http.nginx
+  - makina-states.services.http.nginx.services
 # install & inconditionnaly reboot nginx upon deployments
 /bin/true:
   cmd.run:

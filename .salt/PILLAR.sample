@@ -16,6 +16,18 @@
 # but lists are overidden
 makina-projects.projectname:
   data:
+    registry:
+      addr: "{host}:{port}"
+      debug_addr: "localhost:5001"
+      purging: true
+      level: info
+      mail:
+        levels: ["panic"]
+        smtp:
+          disabled: true
+          smtp: {}
+        from: "{user}@{fqdn}"
+        to: ["{user}@{fqdn}"]
     host: localhost
     port: 50000
     domain: "registry.docker.tld"
@@ -41,17 +53,4 @@ makina-projects.projectname:
         source: "salt://makina-projects/{name}/files/registry.yml"
         target: "{data_root}/configuration/registry.yml"
         mode: 640
-    registry:
-      addr: "{host}:{port}"
-      debug_addr: "localhost:5001"
-      purging: true
-      redis:
-        addr: "localhost:6379"
-      level: info
-      mail:
-        smtp:
-          disabled: true
-          smtp: {}
-        from: "{user}@{fqdn}"
-        to: ["{user}@{fqdn}"]
-# vim:set ft=sls:
+# vim:set ft=sls et :
