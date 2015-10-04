@@ -32,8 +32,6 @@ def launch(name=PROJECT, regreconfigure=False):
     except (KeyboardInterrupt, IOError, OSError) as exc:
         # try to shutdown circus if possible
         now = time.time()
-        __salt__['cmd.run_all']('killall -9 cron')
-        __salt__['cmd.run_all']('killall -9 nginx')
         print('graceful circus stop')
         for i in range(30):
             print('Circus stop try {0}/30'.format(i))
@@ -60,6 +58,9 @@ def launch(name=PROJECT, regreconfigure=False):
                 break
             if not cret['retcode']:
                 break
+        # try to remove leftover processes
+        __salt__['cmd.run_all']('killall -9 cron')
+        __salt__['cmd.run_all']('killall -9 nginx')
     if ret['retcode'] != 0:
         raise Exception('died')
 # vim:set et sts=4 ts=4 tw=80:
