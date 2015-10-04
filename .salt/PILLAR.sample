@@ -16,16 +16,42 @@
 # but lists are overidden
 makina-projects.projectname:
   data:
-    opt: value
-    password: SecretToBeChangedInsidePillar
-  env_defaults:
-    dev:
-      opt: value2
-  os_defaults:
-    Ubuntu:
-# os  filter
-      opt: value1
-    Debian:
-# os familly filter
-      opt1: value11
+    host: localhost
+    port: 50000
+    domain: "registry.docker.tld"
+    server_aliases: []
+    conf: "{data_root}/configuration"
+    nginx_loglevel: crit
+    nginx_upstreams: "salt://makina-projects/{name}/files/nginx.upstreams.conf"
+    nginx_vhost: "salt://makina-projects/{name}/files/nginx.content.conf"
+    images: "{data_root}/data/images"
+    www_dir: "{data_root}/data/www"
+    ssl_cert: null
+    #ssl_cert: |
+    #          --- BEGIN
+    #          --- END ...
+    ssl_key: null
+    #ssl_key: |
+    #         --- BEGIN
+    #         --- END ...
+    htaccess: "{data_root}/configuration/registry.webaccess"
+    force_ssl: true
+    configs:
+      "registry.yml":
+        source: "salt://makina-projects/{name}/files/registry.yml"
+        target: "{data_root}/configuration/registry.yml"
+        mode: 640
+    registry:
+      addr: "{host}:{port}"
+      debug_addr: "localhost:5001"
+      purging: true
+      redis:
+        addr: "localhost:6379"
+      level: info
+      mail:
+        smtp:
+          disabled: true
+          smtp: {}
+        from: "{user}@{fqdn}"
+        to: ["{user}@{fqdn}"]
 # vim:set ft=sls:

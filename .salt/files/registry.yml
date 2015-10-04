@@ -1,0 +1,82 @@
+{% set cfg = salt['mc_project.get_configuration'](name) %}
+{{cfg}}
+{% set data = cfg.data %}
+{#
+version: 0.1
+log:
+  level: {{data.level}}
+  fields:
+    service: registry
+    environment: development
+  hooks:
+    - type: mail
+      disabled: {{data.registry.mail.smtp.disabled}}
+      levels:
+        {% for l in data.registry.mail.levels() %}
+        - {{l}}
+        {% endfor %}
+        # levels placeholder
+      options:
+        smtp:
+          {% for k, v in data.registry.mail.items() %}
+          "{{k}}": "{{v}}"
+          {% endfor %}
+          #addr: mail.example.com:25
+          #username: mailuser
+          #password: password
+          #insecure: true
+        from: {{data.registry.mail.smtp.from}}
+        to:
+          {% for t in data.registry.mail.to %}
+          - {{t}}
+          {% endfor %}
+          # emails placeholder
+storage:
+    delete:
+      enabled: true
+    cache:
+      blobdescriptor: redis
+    filesystem:
+      rootdirectory: "{{data.images}}"
+    maintenance:
+      uploadpurging:
+        enabled: {{data.registry.purging}}
+http:
+    addr: "{{data.registry.addr}}"
+    debug:
+      addr: "{{data.registry.debug_addr}}"
+    headers:
+        X-Content-Type-Options: [nosniff]
+{% if data.registry.redis %}
+redis:
+  addr: "{{data.registry.redis.addr}}"
+  pool:
+    maxidle: 16
+    maxactive: 64
+    idletimeout: 300s
+  dialtimeout: 10ms
+  readtimeout: 10ms
+  writetimeout: 10ms
+{% endif %}
+#notifications:
+#    endpoints:
+#        - name: local-5003
+#          url: http://localhost:5003/callback
+#          headers:
+#             Authorization: [Bearer <an example token>]
+#          timeout: 1s
+#          threshold: 10
+#          backoff: 1s
+#          disabled: true
+#        - name: local-8083
+#          url: http://localhost:8083/callback
+#          timeout: 1s
+#          threshold: 10
+#          backoff: 1s
+#          disabled: true
+#health:
+#  storagedriver:
+#    enabled: true
+#    interval: 10s
+#    threshold: 3
+#}

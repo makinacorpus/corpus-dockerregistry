@@ -1,4 +1,3 @@
-
 {% set cfg = opts['ms_project'] %}
 {# export macro to callees #}
 {% set ugs = salt['mc_usergroup.settings']() %}
@@ -24,20 +23,33 @@
               "{{locs.resetperms}}" "${@}" \
               --dmode '0770' --fmode '0770'  \
               --paths "{{cfg.project_root}}" \
-              --paths "{{cfg.data_root}}" \
-              --users www-data \
-              --users {% if not cfg.no_user%}{{cfg.user}}{% else -%}root{% endif %} \
-              --groups {{cfg.group}} \
-              --user {% if not cfg.no_user%}{{cfg.user}}{% else -%}root{% endif %} \
+              --users www-data:r-x \
+              --users {{cfg.user}} \
+              --groups {{cfg.group}}:r-x \
+              --user {{cfg.user}} \
               --group {{cfg.group}};
+              "{{locs.resetperms}}" "${@}" --no-recursive -k\
+              --dmode '0770' --fmode '0770'  \
+              --paths "{{cfg.data.www_dir}}" \
+              --paths "{{cfg.data.images}}" \
+              --paths "{{cfg.data_root}}" \
+              --users www-data:r-x \
+              --users {{cfg.user}}:rwx\
+              --groups {{cfg.group}}:r-x \
+              --user {{cfg.user}} \
+              --group {{cfg.group}};
+              "{{locs.resetperms}}" "${@}" -k\
+              --dmode '0700' --fmode '0400'\
+              --user "root" --group "root"\
+              --paths "{{cfg.data_root}}/configuration";
               "{{locs.resetperms}}" "${@}" \
-              --no-recursive -o\
+              --no-recursive -o -k\
               --dmode '0555' --fmode '0644'  \
               --paths "{{cfg.project_root}}" \
               --paths "{{cfg.project_dir}}" \
               --paths "{{cfg.project_dir}}"/.. \
               --paths "{{cfg.project_dir}}"/../.. \
-              --users www-data ;
+              --users www-data:--x ;
             fi
   cmd.run:
     - name: {{cfg.project_dir}}/global-reset-perms.sh
@@ -45,4 +57,3 @@
     - user: root
     - watch:
       - file: {{cfg.name}}-restricted-perms
-
