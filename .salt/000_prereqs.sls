@@ -11,18 +11,6 @@ prepreqs-{{cfg.name}}:
       - apache2-utils
       - librados-dev
 
-{{cfg.name}}-dirs:
-  file.directory:
-    - makedirs: true
-    - user: {{cfg.user}}
-    - group: {{cfg.group}}
-    - watch:
-      - pkg: prepreqs-{{cfg.name}}
-    - names:
-      - {{cfg.data.conf}}
-      - {{cfg.data.images}}
-      - {{cfg.data.www_dir}}
-
 conf-redis:
   file.managed:
     - name: /srv/pillar/redis.sls

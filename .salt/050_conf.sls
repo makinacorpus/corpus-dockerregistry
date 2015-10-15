@@ -27,7 +27,7 @@ include:
                      project=cfg.name)}}
 
 {% set circus_data = {
-  'cmd': '{cfg[project_root]}/registry'.format(cfg=cfg, data=cfg.data),
+  'cmd': '{cfg[project_root]}/registry {cfg[data_root]}/configuration/registry.yml'.format(cfg=cfg, data=cfg.data),
   'environment': {},
   'uid': cfg.user,
   'gid': cfg.group,
@@ -37,8 +37,20 @@ include:
   'max_age': 24*60*60} %}
 {{ circus.circusAddWatcher(cfg.name+'-registry', **circus_data) }}
 
+{{cfg.name}}-dirs:
+  file.directory:
+    - makedirs: true
+    - user: {{cfg.user}}
+    - group: {{cfg.group}}
+    - names:
+      - {{cfg.data.conf}}
+      - {{cfg.data.images}}
+      - {{cfg.data.www_dir}}
+
 {{cfg.name}}-configs-before:
   mc_proxy.hook:
+    - watch:
+      - file: {{cfg.name}}-dirs
     - watch_in:
       - mc_proxy: {{cfg.name}}-configs-pre
 

@@ -11,46 +11,37 @@
     - group: {{cfg.group}}
     - contents: |
             #!/usr/bin/env bash
-            if [ -e "{{cfg.pillar_root}}" ];then
-            "{{locs.resetperms}}" "${@}" \
-              --dmode '0770' --fmode '0770' \
-              --user root --group "{{ugs.group}}" \
-              --users root \
-              --groups "{{ugs.group}}" \
-              --paths "{{cfg.pillar_root}}";
-            fi
-            if [ -e "{{cfg.project_root}}" ];then
-              "{{locs.resetperms}}" "${@}" \
-              --dmode '0770' --fmode '0770'  \
-              --paths "{{cfg.project_root}}" \
-              --users www-data:r-x \
-              --users {{cfg.user}} \
-              --groups {{cfg.group}}:r-x \
-              --user {{cfg.user}} \
-              --group {{cfg.group}};
-              "{{locs.resetperms}}" "${@}" --no-recursive -k\
-              --dmode '0770' --fmode '0770'  \
-              --paths "{{cfg.data.www_dir}}" \
-              --paths "{{cfg.data.images}}" \
-              --paths "{{cfg.data_root}}" \
-              --users www-data:r-x \
-              --users {{cfg.user}}:rwx\
-              --groups {{cfg.group}}:r-x \
-              --user {{cfg.user}} \
-              --group {{cfg.group}};
-              "{{locs.resetperms}}" "${@}" -k\
-              --dmode '0700' --fmode '0400'\
-              --user "root" --group "root"\
-              --paths "{{cfg.data_root}}/configuration";
-              "{{locs.resetperms}}" "${@}" \
-              --no-recursive -o -k\
-              --dmode '0555' --fmode '0644'  \
-              --paths "{{cfg.project_root}}" \
-              --paths "{{cfg.project_dir}}" \
-              --paths "{{cfg.project_dir}}"/.. \
-              --paths "{{cfg.project_dir}}"/../.. \
-              --users www-data:--x ;
-            fi
+            setfacl -P -R -b -k "{{cfg.project_dir}}"
+            "{{locs.resetperms}}" --no-acls --no-recursive \
+               --paths="{{cfg.project_dir}}" \
+               --paths="{{cfg.project_dir}}"/.. \
+               --paths="{{cfg.project_dir}}"/../.. \
+               --dmode '0751' --fmode '0770' \
+               --user {{cfg.user}} --group {{cfg.group}};
+            "{{locs.resetperms}}" --no-acls\
+               --paths "{{cfg.pillar_root}}" \
+               --dmode '0770' --fmode '0770'  \
+               --user {{cfg.user}} --group root;
+            find \
+              "{{cfg.project_root}}" \
+              "{{cfg.data_root}}" \
+              "{{cfg.data.www_dir}}" \
+              "{{cfg.data.images}}" \
+              -type f -or -type d | while read i;do
+                if [ ! -h "${i}" ];then
+                  if [ -d "${i}" ];then
+                    chmod g-s "${i}"
+                    chown {{cfg.user}}:www-data "${i}"
+                    chmod g+rxs,o-rwx "${i}"
+                  elif [ -f "${i}" ];then
+                    chown {{cfg.user}}:www-data "${i}"
+                  fi
+                fi
+              done
+            "{{locs.resetperms}}" --no-acls \
+               --paths "{{cfg.data_root}}/configuration" \
+               --dmode '2750' --fmode '0440' \
+               --user "{{cfg.user}}" --group "www-data"
   cmd.run:
     - name: {{cfg.project_dir}}/global-reset-perms.sh
     - cwd: {{cfg.project_root}}

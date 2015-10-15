@@ -16,6 +16,17 @@
 # but lists are overidden
 makina-projects.projectname:
   data:
+    domain: "registry.docker.tld"
+    server_aliases: []
+    ssl_cert: null
+    #ssl_cert: |
+    #          --- BEGIN
+    #          --- END ...
+    ssl_key: null
+    #ssl_key: |
+    #         --- BEGIN
+    htaccess: "{data_root}/configuration/registry.webaccess"
+    #         --- END ...
     registry:
       addr: "{host}:{port}"
       debug_addr: "localhost:5001"
@@ -30,23 +41,12 @@ makina-projects.projectname:
         to: ["{user}@{fqdn}"]
     host: localhost
     port: 5000
-    domain: "registry.docker.tld"
-    server_aliases: []
     conf: "{data_root}/configuration"
     nginx_loglevel: crit
     nginx_upstreams: "salt://makina-projects/{name}/files/nginx.upstreams.conf"
     nginx_vhost: "salt://makina-projects/{name}/files/nginx.content.conf"
     images: "{data_root}/data/images"
     www_dir: "{data_root}/data/www"
-    ssl_cert: null
-    #ssl_cert: |
-    #          --- BEGIN
-    #          --- END ...
-    ssl_key: null
-    #ssl_key: |
-    #         --- BEGIN
-    #         --- END ...
-    htaccess: "{data_root}/configuration/registry.webaccess"
     force_ssl: true
     changeset: "v2.1.1"
     configs:
