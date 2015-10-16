@@ -47,7 +47,7 @@ makina-projects.projectname:
     nginx_vhost: "salt://makina-projects/{name}/files/nginx.content.conf"
     images: "{data_root}/data/images"
     www_dir: "{data_root}/data/www"
-    force_ssl: true
+    force_ssl: false
     changeset: "v2.1.1"
     configs:
       "registry.yml":
