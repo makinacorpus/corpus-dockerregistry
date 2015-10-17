@@ -25,8 +25,8 @@ makina-projects.projectname:
     ssl_key: null
     #ssl_key: |
     #         --- BEGIN
-    htaccess: "{data_root}/configuration/registry.webaccess"
     #         --- END ...
+    htaccess: "{data_root}/configuration/registry.webaccess"
     registry:
       addr: "{host}:{port}"
       debug_addr: "localhost:5001"

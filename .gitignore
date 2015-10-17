@@ -3,3 +3,9 @@ registry-v*.xz
 registry-v*.xz.md5
 /registry
 /registry.xz
+/*.key
+/*.pem
+/*.crt
+/*.csr
+/*.srl
+/volume
