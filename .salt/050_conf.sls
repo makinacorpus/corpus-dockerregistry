@@ -27,7 +27,7 @@ include:
                      project=cfg.name)}}
 
 {% set circus_data = {
-  'cmd': '{cfg[project_root]}/registry {cfg[data_root]}/configuration/registry.yml'.format(cfg=cfg, data=cfg.data),
+  'cmd': '{cfg[project_root]}/bin/registry {cfg[data_root]}/configuration/registry.yml'.format(cfg=cfg, data=cfg.data),
   'environment': {},
   'uid': cfg.user,
   'gid': cfg.group,

@@ -9,7 +9,7 @@ fi
 cd distribution
 git pull
 git reset --hard $changeset
-name=dockerregistry
+name=dockerregistrybuilder
 cp Dockerfile dockerfile.a
 sed "/^ENTRYPOINT/d" -i dockerfile.a
 sed "/^CMD/d" -i dockerfile.a

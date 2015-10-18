@@ -19,7 +19,7 @@ def reconfigure(name=PROJECT):
     _s = __salt__
     cfg = _s['mc_project.get_configuration'](name)
     ret = _s['mc_project.deploy'](name,
-                                  only='install', 
+                                  only='install',
                                   only_steps=['050_conf.sls'])
     output = salt.loader.outputters(__opts__)
     print(output['nested'](ret))

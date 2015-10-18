@@ -3,6 +3,8 @@ Makina-States bases docker registry
 This provides a docker distribution (registry v2) docker image based on
 makina-states.
 
+This registry cooperate with a daemon that implements registry V2 tokens, with the courtesy of cesanta.
+
 The registry wont allow any anonymous configuration
 
 Volumes
@@ -24,20 +26,20 @@ OPTIONAL: Generate a a certificate with a custom authority for test
 ----------------------------------------------------------------------------
 <pre>
 domain="yourdomain.tld"
-mkdir -p volume/configuration
-openssl genrsa -des3 -out sca-key.pem
-openssl genrsa -des3 -out s${domain}-key.pem
-openssl rsa -in sca-key.pem -out ca-key.pem
-openssl rsa -in s${domain}-key.pem -out ${domain}-key.pem
-openssl req -new -x509 -days $((365*30)) -key ca-key.pem -out ca.pem -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=dockerca/"
-openssl req -new -key ${domain}-key.pem -out ${domain}.csr -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=*.${domain}/"
-openssl x509 -CAcreateserial -req -days $((365*30)) -in ${domain}.csr -CA ca.pem -CAkey ca-key.pem -out ${domain}.crt
-cat ${domain}.crt ca.pem > ${domain}.bundle.crt
+mkdir -p ca volume/configuration
+openssl genrsa -des3 -out ca/sca-key.pem
+openssl genrsa -des3 -out ca/s${domain}-key.pem
+openssl rsa -in ca/sca-key.pem -out ca/ca-key.pem
+openssl rsa -in ca/s${domain}-key.pem -out ca/${domain}-key.pem
+openssl req -new -x509 -days $((365*30)) -key ca/ca-key.pem -out ca/ca.pem -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=dockerca/"
+openssl req -new -key ca/${domain}-key.pem -out ca/${domain}.csr -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=*.${domain}/"
+openssl x509 -CAcreateserial -req -days $((365*30)) -in ca/${domain}.csr -CA ca/ca.pem -CAkey ca-key.pem -out ca/${domain}.crt
+cat ca/${domain}.crt ca.pem > ca/${domain}.bundle.crt
 </pre>
 
 Register the certificate to the local openssl configuration
 <pre>
-cp ${domain}.bundle.crt /usr/local/share/ca-certificates && update-ca-certificates
+cp ca/${domain}.bundle.crt /usr/local/share/ca-certificates && update-ca-certificates
 </pre>
 
 Configure the PILLAR
@@ -73,14 +75,14 @@ makina-projects.registry:
         ...
         S17wzmffRktued3rJ+efBUvegdnbJG1nxT51znLy5mlLAD37OCf2DgqlGyL1UcEr
         XhidyUpZcJ4Fr2koosQZ8z20j2tXDanhbSi1osJ6yQi8rjRdJZeCMwA=
-        -----END CERTIFICATE----- 
+        -----END CERTIFICATE-----
     ssl_key: |
       -----BEGIN RSA PRIVATE KEY-----
       MIIEpQIBAAKCAQEAzzBVPJvbMXFBN1mErd+T3QDUpvI6YvJt3JJjBptvcke1X9Si
       ...
       fFwSDE8arfpgbAfrtYgWjd0248GRV46iE1BuE4uuZ41XQ9J9DILzjMk=
       -----END RSA PRIVATE KEY-----
-# vim:set ft=sls et : 
+# vim:set ft=sls et :
 </pre>
 
 

@@ -7,4 +7,4 @@ RUN  cd /srv/projects/registry/project\
      && salt-call --local -lall mc_project.deploy registry only=install,fixperms
 EXPOSE 80 443
 VOLUME ["/srv/projects/registry/data"]
-CMD ["/srv/projects/registry/project/launch.sh"]
+CMD ["/srv/projects/registry/project/bin/launch.sh"]

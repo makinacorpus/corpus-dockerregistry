@@ -9,3 +9,4 @@ registry-v*.xz.md5
 /*.csr
 /*.srl
 /volume
+/ca

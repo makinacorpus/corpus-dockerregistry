@@ -1,26 +1,35 @@
 {% set cfg = opts.ms_project %}
 {% set data = cfg.data %}
-download:
+{% for binary in ['registry', 'docker_auth'] %}
+{{binary}}-download:
   file.managed:
-    - name: "{{cfg.project_root}}/registry.xz"
-    - source: "https://github.com/makinacorpus/corpus-dockerregistry/releases/download/bins/registry-{{data.changeset}}.xz"
-    - source_hash: "https://github.com/makinacorpus/corpus-dockerregistry/releases/download/bins/registry-{{data.changeset}}.xz.md5"
+    - name: "{{cfg.project_root}}/{{binary}}.xz"
+    - source: "https://github.com/makinacorpus/corpus-dockerregistry/releases/download/binaries/{{binary}}-{{data.changeset}}.xz"
+    - source_hash: "https://github.com/makinacorpus/corpus-dockerregistry/releases/download/binaries/{{binary}}-{{data.changeset}}.xz.md5"
     - user: {{cfg.user}}
     - group: {{cfg.group}}
-    - mode: 750 
-extract:
+    - mode: 750
+{{binary}}-container:
+  cmd.directory:
+    - name: "{{cfg.project_root}}/bin"
+    - user: root
+    - mode: 755
+    - makedirs: true
+{{binary}}-extract:
   cmd.wait:
-  - name: "xz -k -d -c registry.xz > registry.tmp && mv -f registry.tmp registry && chmod 755 registry"
-  - cwd: "{{cfg.project_root}}"
-  - user: root
-  - watch:
-    - file: download
+    - name: "xz -k -d -c {{binary}}.xz > {{binary}}.tmp && mv -f {{binary}}.tmp bin/{{binary}} && chmod 755 bin/{{binary}}"
+    - cwd: "{{cfg.project_root}}"
+    - user: root
+    - watch:
+      - file: {{binary}}-download
+      - file: {{binary}}-container
 extract-fallback:
   cmd.run:
-  - name: "xz -k -d -c registry.xz > registry.tmp && mv -f registry.tmp registry && chmod 755 registry"
-  - onlyif: test ! -e registry
-  - cwd: "{{cfg.project_root}}"
-  - user: root
-  - watch:
-    - cmd: extract
-   
+    - name: "xz -k -d -c {{binary}}.xz > {{binary}}.tmp && mv -f {{binary}}.tmp bin/{{binary}} && chmod 755 bin/{{binary}}"
+    - onlyif: test ! -e bin/{{binary}}
+    - cwd: "{{cfg.project_root}}"
+    - user: root
+    - watch:
+      - cmd: {{binary}}-extract
+      - file: {{binary}}-container
+{% endfor %}
