@@ -19,26 +19,27 @@ PROJECT = 'registry'
 log = logging.getLogger(__name__)
 
 
-def create_or_get_release(rdvn gh_user, gh_password):
+def create_or_get_release(u, release, gh_user, gh_password):
     tok = HTTPBasicAuth(gh_user, gh_password)
     releases = requests.get("{0}/releases".format(u), auth=tok)
     pub = releases.json()
-    if fdv not in [a['tag_name'] for a in pub]:
+    if release not in [a['tag_name'] for a in pub]:
         cret = requests.post(
             "{0}/releases".format(u),
             auth=tok,
-            data=json.dumps({'tag_name': fdv,
-                             'name': fdv,
-                             'body': fdv}))
+            data=json.dumps({'tag_name': release,
+                             'name': release,
+                             'body': release}))
         if 'created_at' not in cret.json():
             pprint(cret)
             raise ValueError('error creating release')
-        log.info('Created release {0}/{1}'.format(u, fdv))
+        log.info('Created release {0}/{1}'.format(u, release))
         pub = requests.get("{0}/releases".format(u), auth=tok).json()
-        if fdv not in [a['tag_name'] for a in pub]:
+        if release not in [a['tag_name'] for a in pub]:
             raise ValueError('error getting release')
-    release = [a for a in pub if a['tag_name'] == fdv][0]
+    release = [a for a in pub if a['tag_name'] == release][0]
     return releases, release
+
 
 def upload_binaries(binaries,
                     gh_url,
@@ -49,7 +50,9 @@ def upload_binaries(binaries,
     '''
     orga = gh_url.replace('.git', '').split('github.com/')[1]
     u = "https://api.github.com/repos/" + orga
-    create_or_get_release(release_name, gh_user, gh_password)
+    releases, release = create_or_get_release(
+        u, release_name, gh_user, gh_password)
+    tok = HTTPBasicAuth(gh_user, gh_password)
     assets = requests.get("{0}/releases/{1}/assets".format(
         u, release['id']), auth=tok).json()
     for fpath in binaries:
@@ -86,12 +89,18 @@ def upload_binaries(binaries,
 def release_binary(gh_url,
                    gh_user,
                    gh_password,
-                   docker_auth=_changeset=None,
                    registry_changeset=None,
+                   docker_auth_changeset=None,
                    upload=True,
                    make_auth_binary=True,
                    make_binary=True):
-    cfg = __salt__['mc_dumper.sls_load']('/project/.salt/PILLAR.sample')
+    cfg = __salt__['mc_utils.sls_load']('/project/.salt/PILLAR.sample')
+    cfg = cfg[[a for a in cfg][0]]
+    data = cfg['data']
+    if not registry_changeset:
+        registry_changeset = data['changeset']
+    if not docker_auth_changeset:
+        docker_auth_changeset = data['auth_changeset']
     import pdb;pdb.set_trace()  ## Breakpoint ##
     if make_binary:
         cret = __salt__['cmd.run_all'](
@@ -101,6 +110,14 @@ def release_binary(gh_url,
             print(cret['stdout'])
             print(cret['stderr'])
             raise ValueError('registry build failed')
+    if make_auth_binary:
+        cret = __salt__['cmd.run_all'](
+            '/project/bin/build-auth-binary.sh',
+            env={'changeset': registry_changeset})
+        if cret['retcode'] != 0:
+            print(cret['stdout'])
+            print(cret['stderr'])
+            raise ValueError('auth registry build failed')
     if upload:
         binaries = [
             '/project/registry-{0}'.format(registry_changeset),

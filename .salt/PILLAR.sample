@@ -49,6 +49,7 @@ makina-projects.projectname:
     www_dir: "{data_root}/data/www"
     force_ssl: false
     changeset: "v2.1.1"
+    auth_changeset: "e3e2d6"
     configs:
       "registry.yml":
         source: "salt://makina-projects/{name}/files/registry.yml"

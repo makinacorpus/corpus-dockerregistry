@@ -29,6 +29,6 @@ else
         -v /var/run/docker:/var/run/docker\
         -v /var/run/docker.sock:/var/run/docker.sock\
         makinacorpus/makina-states-ubuntu-vivid-stable:latest\
-        /project/release_registry.sh DO $@
+        /project/bin/release_registry.sh DO $@
 fi
 # vim:set et sts=4 ts=4 tw=80:

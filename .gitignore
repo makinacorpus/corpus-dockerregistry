@@ -10,3 +10,6 @@ registry-v*.xz.md5
 /*.srl
 /volume
 /ca
+/docker_auth
+/binaries
+/go
