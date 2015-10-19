@@ -1,0 +1,37 @@
+{% set cfg = salt['mc_project.get_configuration'](project) %}
+{% set data = cfg.data %}
+# A simple example. See reference.yml for explanation for explanation of all options.
+#
+#  auth:
+#    token:
+#      realm: "https://127.0.0.1:5001/auth"
+#      service: "Docker registry"
+#      issuer: "Acme auth server"
+#      rootcertbundle: "/path/to/server.pem"
+server:
+  addr: "{{data.auth_address}}:{{data.auth_port}}"
+  certificate: "/path/to/server.pem"
+  key: "/path/to/server.key"
+token:
+  issuer: "{{data.domain}} auth server"
+  expiration: 900
+  realm: token-realm
+  service: token-service
+  issuer: registry-token-issuer
+  rootcertbundle: "{{cfg.data_root}}/configuration/cert.pem"
+users:
+{%for u, udata in users.items() %}
+  # Password is specified as a BCrypt hash. Use htpasswd -B to generate.
+  "{{u}}":
+    password: "salt['cmd.run']('sswd -B {0}')"
+{% endfor %}
+
+acl:
+  # Admin has full access to everything.
+  - match: {account: "admin"}
+    actions: ["*"]
+  # User "user" can pull stuff.
+  - match: {account: "user"}
+    actions: ["pull"]
+  # Access is denied by default.
+# vim: set et:

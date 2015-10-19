@@ -71,12 +71,13 @@ def upload_binaries(binaries,
             upurl = re.sub(
                 '{.*', '', release['upload_url']
             )+'?name={0}&size={1}'.format(toup, size)
+            if fpath.endswith('.md5'):
+                headers = {'Content-Type': 'text/plain'}
+            else:
+                headers = {'Content-Type': 'application/octet-stream'}
+            log.info('Uploading using {0}'.format(upurl))
             cret = requests.post(
-                upurl, auth=tok,
-                data=fcontent,
-                headers={
-                    'Content-Type':
-                    'application/x-xz'})
+                upurl, auth=tok, data=fcontent, headers=headers)
             jret = cret.json()
             if jret.get('size', '') != size:
                 pprint(jret)
@@ -101,7 +102,6 @@ def release_binary(gh_url,
         registry_changeset = data['changeset']
     if not docker_auth_changeset:
         docker_auth_changeset = data['auth_changeset']
-    import pdb;pdb.set_trace()  ## Breakpoint ##
     if make_binary:
         cret = __salt__['cmd.run_all'](
             '/project/bin/build-binary.sh',
@@ -120,8 +120,14 @@ def release_binary(gh_url,
             raise ValueError('auth registry build failed')
     if upload:
         binaries = [
-            '/project/registry-{0}'.format(registry_changeset),
-            '/project/registry-{0}.md5'.format(registry_changeset),
+            '/project/binaries/registry-{0}.xz'.format(
+                registry_changeset),
+            '/project/binaries/registry-{0}.xz.md5'.format(
+                registry_changeset),
+            '/project/binaries/auth_server-{0}.xz'.format(
+                docker_auth_changeset),
+            '/project/binaries/auth_server-{0}.xz.md5'.format(
+                docker_auth_changeset),
         ]
         upload_binaries(binaries, gh_url, gh_user, gh_password)
 # vim:set et sts=4 ts=4 tw=80:

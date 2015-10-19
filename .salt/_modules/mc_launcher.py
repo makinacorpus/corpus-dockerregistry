@@ -4,10 +4,15 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 import time
+import bcrypt
 import salt.loader
 
 
 PROJECT = 'registry'
+
+
+def encrypt(password, salt=12):
+    return bcrypt.hashpw(password, bcrypt.gensalt(12))
 
 
 def reconfigure(name=PROJECT):
