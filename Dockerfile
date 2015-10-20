@@ -1,7 +1,6 @@
 FROM makinacorpus/makina-states-ubuntu-vivid-stable
-ADD .git /srv/projects/registry/project/.git
+ADD . /srv/projects/registry/project
 RUN  cd /srv/projects/registry/project\
-     && git reset --hard\
      && echo FORCE_REBUILD_ID=$(git log -n1 --pretty=format:"%h")\
      && /srv/projects/registry/project/bin/build.sh
 EXPOSE 80 443
