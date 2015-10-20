@@ -9,12 +9,9 @@ Shell scripts:
 Salt modules:
 - mc_corpusreg.py: helper to release the two go binaries (registry & docker_auth)
 - mc_launcher.py: helper to start the circus daemon which launch all other processes:
-
     - nginx reverse proxy to:
-
         - /docker_auth_service: cesanta/docker_auth
         - /.*: passthrough to docker registry
-
 	- sshd
 	- cron
 	- logrotate
