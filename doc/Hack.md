@@ -17,9 +17,6 @@ Salt modules:
 	- registry
 	- docker_auth
 
-
-
-
 Release the go binaries
 --------------------------
 - Maybe udpate .salt/PILLAR.sample to upgrade/edit the versions of the registry & docker_auth
