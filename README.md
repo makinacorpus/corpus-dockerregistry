@@ -4,6 +4,12 @@ This provides a docker distribution (registry v2) docker image based on makina-s
 This registry embeds a daemon that implements registry V2 tokens, (cesanta/docker_auth).<br/>
 The registry won't allow any anonymous configuration.
 
+You will certainly need to read the official documentation around the docker registry.
+Pay attention that you need to access your registry with a DNS name and a valid SSL certificate.
+This certicate must be signed by an authority (even if you generates this authority).
+Other setup will make you go in troubles.
+You can of course follow the SSL certificate generation snippet bellow.
+
 Code organization
 -------------------
 We separate the project codebase from any persistent daa that it needs and create.<br/>
