@@ -47,7 +47,7 @@ gpasswd -a $(whoami) editor
 
 Secondly, you will need to have a first sucessful complete build to have a "cache" image to stage your new developements on.
 <pre>
-docker build -t <mydevtag> .
+docker build -t mydevtag .
 </pre>
 
 Last but not least, now you can launch a container based on this image to hapilly hack the image
