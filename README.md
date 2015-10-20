@@ -136,5 +136,5 @@ docker run -ti\
 
 Hack the code of this repository
 ---------------------------------
-See [doc/Hach.md](doc/Hack.md)
+See [doc/Hack.md](doc/Hack.md)
 
