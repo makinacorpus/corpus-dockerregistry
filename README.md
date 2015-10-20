@@ -76,7 +76,8 @@ You need then to fill the pillar to setup a domain to serve for the registry (th
 cd $WORKSPACE/project_data
 mkdir -p configuration
 cp .salt/PILLAR.sample volume/configuration/pillar.sls
-sed -re "s/makina-projects.projectname/makina-projects.registry/g" -i volume/configuration/pillar.sls
+sed -re "s/makina-projects.projectname/makina-projects.registry/g"\
+  -i volume/configuration/pillar.sls
 $EDITOR volume/configuration/pillar.sls
 ```
 Edit at least:
