@@ -18,7 +18,7 @@ You need to add a volume that will contains those subdirs::
 <pre>
 
 project/            <- git clone of this repository, the project code inside the
-                       container. this folder contains a '.salt' folder which 
+                       container. this folder contains a '.salt' folder which
                        describe how to install & configure this project.
                        (/srv/projects/<name>/project)
 project_data/da     <- ssl generated certificates
@@ -81,7 +81,7 @@ $EDITOR volume/configuration/pillar.sls
   -> edit at least:
 
     - domain
-    - certificate key and bundle (content) 
+    - certificate key and bundle (content)
       (maybe cat project_data/ca/ca/${domain}.bundle.crt
        && cat ca/${domain}.${domain}-key.pem
     - list of http users and password to allow
