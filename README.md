@@ -122,7 +122,7 @@ Build & Run
 -------------
 ***Be sure to have completed the initial configuration (SSL, PILLAR) before launching the container.***
 
-You do not need to Build the image, you can directly download it from the docker-hub.
+You may not need to **build**the image, you can directly download it from the docker-hub.
 <pre>
 docker build -t makinacorpus/registry .
 # or docker pull makinacorpus/registry
