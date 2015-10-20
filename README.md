@@ -55,9 +55,12 @@ openssl genrsa -des3 -out ca/sca-key.pem
 openssl genrsa -des3 -out ca/s${domain}-key.pem
 openssl rsa -in ca/sca-key.pem -out ca/ca-key.pem
 openssl rsa -in ca/s${domain}-key.pem -out ca/${domain}-key.pem
-openssl req -new -x509 -days $((365*30)) -key ca/ca-key.pem -out ca/ca.pem -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=dockerca/"
-openssl req -new -key ca/${domain}-key.pem -out ca/${domain}.csr -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=*.${domain}/"
-openssl x509 -CAcreateserial -req -days $((365*30)) -in ca/${domain}.csr -CA ca/ca.pem -CAkey ca-key.pem -out ca/${domain}.crt
+openssl req -new -x509 -days $((365*30)) -key ca/ca-key.pem -out ca/ca.pem\
+  -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=dockerca/"
+openssl req -new -key ca/${domain}-key.pem -out ca/${domain}.csr\
+  -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=*.${domain}/"
+openssl x509 -CAcreateserial -req -days $((365*30)) -in ca/${domain}.csr\
+  -CA ca/ca.pem -CAkey ca-key.pem -out ca/${domain}.crt
 cat ca/${domain}.crt ca.pem > ca/${domain}.bundle.crt
 </pre>
 
