@@ -47,7 +47,7 @@ mkdir project_data
 
 OPTIONAL: Generate a a certificate with a custom authority for test
 ----------------------------------------------------------------------------
-<pre>
+```bash
 cd $WORKSPACE/project_data
 domain="yourdomain.tld"
 mkdir -p ca
@@ -62,31 +62,30 @@ openssl req -new -key ca/${domain}-key.pem -out ca/${domain}.csr\
 openssl x509 -CAcreateserial -req -days $((365*30)) -in ca/${domain}.csr\
   -CA ca/ca.pem -CAkey ca-key.pem -out ca/${domain}.crt
 cat ca/${domain}.crt ca.pem > ca/${domain}.bundle.crt
-</pre>
+```
 
 Register the certificate to the local openssl configuration
-<pre>
+```bash
 cp ca/${domain}.bundle.crt /usr/local/share/ca-certificates && update-ca-certificates
-</pre>
+```
 
 Configure the PILLAR
 -------------------------
 You need then to fill the pillar to setup a domain to serve for the registry (the virtualhost name) and the SSL certificate details
-<pre>
+```bash
 cd $WORKSPACE/project_data
 mkdir -p configuration
 cp .salt/PILLAR.sample volume/configuration/pillar.sls
 sed -re "s/makina-projects.projectname/makina-projects.registry/g" -i volume/configuration/pillar.sls
 $EDITOR volume/configuration/pillar.sls
-  -> edit at least:
-
-    - domain
-    - certificate key and bundle (content)
-      (maybe cat project_data/ca/ca/${domain}.bundle.crt
-       && cat ca/${domain}.${domain}-key.pem
-    - list of http users and password to allow
-    - You can remove what is not overriden if you want.
-</pre>
+```
+Edit at least:
+  - domain
+  - certificate key and bundle (content)
+    (maybe cat project_data/ca/ca/${domain}.bundle.crt
+     && cat ca/${domain}.${domain}-key.pem
+  - list of http users and password to allow
+  - You can remove what is not overriden if you want.
 
 Example configuration/pillar.sls
 ```yaml
