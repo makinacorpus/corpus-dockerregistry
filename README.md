@@ -129,7 +129,9 @@ docker pull makinacorpus/registry
 </pre>
 Run
 <pre>
-docker run -ti -v "${PWD}_data/volume":/srv/projects/registry/data makinacorpus/registry
+docker run -ti\
+  -v "${PWD}_data/volume":/srv/projects/registry/data\
+  makinacorpus/registry
 </pre>
 
 Hack the code of this repository
