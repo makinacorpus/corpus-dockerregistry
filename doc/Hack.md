@@ -39,7 +39,7 @@ sudo gpasswd -a $(whoami) editor
 ```
 
 Secondly, you will need to have a first sucessful complete build to have a "cache" image to stage your new developements on.
-``bash
+```bash
 <pre>
 sudo docker build -t mydevtag .
 ```
