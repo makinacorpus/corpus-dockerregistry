@@ -37,13 +37,13 @@ Develop the code of this image
 First, you will have to add your user to a special **editor** group  for the sole purpose
 of editing the files of a running container.
 <pre>
-groupadd -u 65753 editor
-gpasswd -a $(whoami) editor
+sudo groupadd -u 65753 editor
+sudo gpasswd -a $(whoami) editor
 </pre>
 
 Secondly, you will need to have a first sucessful complete build to have a "cache" image to stage your new developements on.
 <pre>
-docker build -t mydevtag .
+sudo docker build -t mydevtag .
 </pre>
 
 Last but not least, now you can launch a container based on this image to hapilly hack the image
