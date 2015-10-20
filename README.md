@@ -82,7 +82,8 @@ $EDITOR volume/configuration/pillar.sls
 
     - domain
     - certificate key and bundle (content) 
-      (maybe cat project_data/ca/ca/${domain}.bundle.crt && cat ca/${domain}.${domain}-key.pem
+      (maybe cat project_data/ca/ca/${domain}.bundle.crt
+       && cat ca/${domain}.${domain}-key.pem
     - list of http users and password to allow
     - You can remove what is not overriden if you want.
 </pre>
