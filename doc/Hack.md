@@ -2,7 +2,6 @@ Components
 ------------
 Shell scripts:
 - a Release module in .salt to release two binaries (see: bin/release_registry.sh)
-
 	-  one for cesanta/docker_auth (see also: bin/build-auth-binary.sh)
 	-  one for the docker distribution binary (see also: bin/build-binary.sh)
 
