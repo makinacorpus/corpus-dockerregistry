@@ -28,7 +28,7 @@ Release the go binaries
 $EDITOR .salt/PILLAR.sample
 export GH_USER="<github_username>"
 # notice the initial space to avoid this going into your bash history
-    export GH_PASSWORD="<github_password>"
+ export GH_PASSWORD="<github_password>"
 ./bin/release_registry.sh
 </pre>
 
