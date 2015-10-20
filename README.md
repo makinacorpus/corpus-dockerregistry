@@ -1,15 +1,15 @@
 Makina-States bases docker registry
 ===================================
-This provides a docker distribution (registry v2) docker image based on makina-states.
-This registry embeds a daemon that implements registry V2 tokens, (cesanta/docker_auth).
+This provides a docker distribution (registry v2) docker image based on makina-states.<br/>
+This registry embeds a daemon that implements registry V2 tokens, (cesanta/docker_auth).<br/>
 The registry won't allow any anonymous configuration.
 
 Code organization
 -------------------
-We separate the project codebase from any persistent daa that it needs and create.
-For this we use two root separates folders, one for the clone, and one for the persistent data.
-By convention, the name of the persistant data holding directory is the name of the clone folder suffixed by "_data".
-Eg if you clone your project inside "/project", the data folder will be /project_data".
+We separate the project codebase from any persistent daa that it needs and create.<br/>
+For this we use two root separates folders, one for the clone, and one for the persistent data.<br/>
+By convention, the name of the persistant data holding directory is the name of the clone folder suffixed by "_data".<br/>
+Eg if you clone your project inside "/project", the data folder will be /project_data".<br/>
 The data folder can't et must not be inside the project folder as we drastically play with unix permissions to ensure proper security and the two of those folders do not have the same policies.
 
 Volumes
@@ -19,11 +19,11 @@ You need to add a volume that will contains those subdirs::
 
    project/                          <- git clone of this repository
    project_data/configuration:       <- contains persistent data
-   project_data/volume                      <- mounted as the "mc_project" data folder inside the container
-                                               AKA the persistent data folder
+   project_data/volume               <- mounted as the "mc_project" data folder inside the container
+                                        AKA the persistent data folder
    project_data/volume/configuration:       <- contains the configuration
-       pillar.sls:        <- extra registry saltstack configuration
-       registry.webaccess <- htpasswd file               (created but empty)
+     pillar.sls:        <- extra registry saltstack configuration
+     registry.webaccess <- htpasswd file               (created but empty)
    project_data/volume/data/images          <- where the images are stored (autocreated)
    project_data/volume/data/www_dir         <- reverse proxy docroot       (autocreated)
 
@@ -100,7 +100,6 @@ makina-projects.registry:
       ...
       fFwSDE8arfpgbAfrtYgWjd0248GRV46iE1BuE4uuZ41XQ9J9DILzjMk=
       -----END RSA PRIVATE KEY-----
-# vim:set ft=sls et :
 </pre>
 
 
@@ -121,6 +120,4 @@ docker run -d -v "${PWD}_data/volume":/srv/projects/registry/data makinacorpus/r
 
 Hack the code of this repository
 ---------------------------------
-
-
 
