@@ -89,7 +89,7 @@ $EDITOR volume/configuration/pillar.sls
 </pre>
 
 Example configuration/pillar.sls
-<pre>
+```yaml
 makina-projects.registry:
   data:
     domain: "registryh.docker.tld"
@@ -112,7 +112,7 @@ makina-projects.registry:
       ...
       fFwSDE8arfpgbAfrtYgWjd0248GRV46iE1BuE4uuZ41XQ9J9DILzjMk=
       -----END RSA PRIVATE KEY-----
-</pre>
+```
 
 
 Allow users to connect to the registry
@@ -123,16 +123,16 @@ Build & Run
 ***Be sure to have completed the initial configuration (SSL, PILLAR) before launching the container.***
 
 You may not need to **build** the image, you can directly download it from the docker-hub.
-<pre>
+```bash
 docker pull makinacorpus/registry
 # or docker build -t makinacorpus/registry .
-</pre>
+```
 Run
-<pre>
+```bash
 docker run -ti\
   -v "${PWD}_data/volume":/srv/projects/registry/data\
   makinacorpus/registry
-</pre>
+```
 
 Hack the code of this repository
 ---------------------------------
