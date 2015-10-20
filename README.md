@@ -21,7 +21,11 @@ You need to add a volume that will contains those subdirs::
    project_data/configuration:       <- contains persistent data
    project_data/volume               <- mounted as the "mc_project" data folder inside the container
                                         AKA the persistent data folder
-   project_data/volume/configuration:       <- contains the configuration
+</pre>
+
+***project_data***
+<pre>
+project_data/volume/configuration:       <- contains the configuration
      pillar.sls:        <- extra registry saltstack configuration
      registry.webaccess <- htpasswd file               (created but empty)
    project_data/volume/data/images          <- where the images are stored (autocreated)
