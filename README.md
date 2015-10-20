@@ -120,6 +120,16 @@ makina-projects.registry:
       -----END RSA PRIVATE KEY-----
 ```
 
+DNS configuration
+-----------------------------
+When your registry container is running and you want to access it locally, just inspect and register it in your /etc/hosts file
+```bash
+IP=$(sudo docker inspect -f '{{ .NetworkSettings.IPAddress }}' <YOUR_CONTAINER_ID>)
+cat | sudo sh << EOF
+sed -i -re "/registryh.docker.tld/d" /etc/hosts
+echo $IP registryh.docker.tld>>/etc/hosts
+EOF
+```
 
 Allow users to connect to the registry
 --------------------------------------
