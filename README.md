@@ -17,12 +17,12 @@ Volumes
 You need to add a volume that will contains those subdirs::
 <pre>
 
-   project/                    <- git clone of this repository, the project code inside the container.
-                                  this folder contains a '.salt' folder which describe how to install & configure this project.
-                                  (/srv/projects/<name>/project)
-   project_data/configuration  <- contains persistent data
-   project_data/volume         <- mounted as the persistent data folder inside the container
-                                  (/srv/projects/<name>/data)
+   project/            <- git clone of this repository, the project code inside the container.
+                          this folder contains a '.salt' folder which describe how to install & configure this project.
+                          (/srv/projects/<name>/project)
+   project_data/da     <- ssl generated certificates
+   project_data/volume <- mounted as the persistent data folder inside the container
+                          (/srv/projects/<name>/data)
 </pre>
 
 ***project_data***
