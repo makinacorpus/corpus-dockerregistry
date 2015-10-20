@@ -24,28 +24,29 @@ Release the go binaries
 --------------------------
 - Maybe udpate .salt/PILLAR.sample to upgrade/edit the versions of the registry & docker_auth
 - launch the release helper which will spawn a docker container, build the binaries into two others and finally upon completness upload binaries to github.
-<pre>
+```bash
 $EDITOR .salt/PILLAR.sample
 export GH_USER="<github_username>"
 # notice the initial space to avoid this going into your bash history
  export GH_PASSWORD="<github_password>"
 ./bin/release_registry.sh
-</pre>
+```
 
 Develop the code of this image
 --------------------------------
 First, you will have to add your user to a special **editor** group  for the sole purpose
 of editing the files of a running container.
-<pre>
+```bash
 sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
-</pre>
+```
 
 Secondly, you will need to have a first sucessful complete build to have a "cache" image to stage your new developements on.
+``bash
 <pre>
 sudo docker build -t mydevtag .
-</pre>
+```
 
 Last but not least, now you can launch a container based on this image to hapilly hack the image
-<pre>
-</pre>
+```bash
+```
