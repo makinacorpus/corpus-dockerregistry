@@ -7,7 +7,7 @@ Shell scripts:
 	-  one for the docker distribution binary (see also: bin/build-binary.sh)
 
 Salt modules:
-- mc_corpusreg.py: helpers (like password generators)
+- mc_corpusreg.py: helper to release the two go binaries (registry & docker_auth)
 - mc_launcher.py: helper to start the circus daemon which launch all other processes:
 
 	- nginx
@@ -23,3 +23,13 @@ The image consists in
 
 	- /docker_auth_service: cesanta/docker_auth
 	- /.*: passthrough to docker registry
+
+Release the binary
+---------------------
+This will spawn a docker container, build the binaries into two others and finally upon completness upload binaries to github
+<pre>
+export GH_USER="<github_username>"
+# notice the initial space to avoid this going into your bash history
+ export GH_PASSWORD="<github_password>"
+./bin/release_registry.sh
+</pre>

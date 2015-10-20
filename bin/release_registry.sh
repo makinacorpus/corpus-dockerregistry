@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 cd "$(dirname ${0})/.."
+W="${PWD}"
+DATA="${DATA:-"${W}_data"}"
 set -x
 saltcall() {
     salt-call --local -lall --retcode-passthrough "${@}"
@@ -24,6 +26,7 @@ else
         -e GH_USER="${GH_USER}"\
         -e GH_PASSWORD="${GH_PASSWORD}"\
         -v $PWD:/project\
+        -v ${DATA}:/data\
         -v /usr/bin/docker:/usr/bin/docker:ro\
         -v /var/lib/docker:/var/lib/docker\
         -v /var/run/docker:/var/run/docker\

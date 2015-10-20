@@ -5,7 +5,7 @@ binary="auth_server"
 set -ex
 cd $(dirname $0)/..
 W="$(pwd)"
-DATA="${W}_data"
+DATA="${DATA:-"${W}_data"}"
 if [ ! -d $DATA/docker_auth ];then
     git clone https://github.com/cesanta/docker_auth.git $DATA/docker_auth
 fi

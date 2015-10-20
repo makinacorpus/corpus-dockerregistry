@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 cd "$(dirname "${0}")"
-MS="${MS:-"https://github.com/makinacorpus/makina-states.git"}";MS_BR="stable"
 name="registry"
+MS="${MS:-"https://github.com/makinacorpus/makina-states.git"}"
+MS_BR="stable"
 W="$(pwd)"
-DATA="$(pwd)_data"
+DATA="${DATA:-"${W}_data"}"
 FROM="${FROM:-"$(egrep ^FROM $W/Dockerfile|head -n1|awk '{print $2}')"}"
 LEVEL="${LEVEL:-info}"
 pillar="${pillar:-"${W}/../data/configuration/pillar.sls"}"
@@ -19,16 +20,16 @@ if [ "x${indocker}" = "x" ];then
     exit $?
 fi
 for i in\
- /srv/salt/makina-states /srv/mastersalt/makina-states $W/makina-states;do
-    if [ -d $i ];then break;fi
+ /srv/salt/makina-states /srv/mastersalt/makina-states "$DATA/makina-states";do
+    if [ -d "$i" ];then break;fi
 done
-if [ ! -d $ms ];then
+if [ ! -d "$ms" ];then
     git clone "${MS}" "${ms}";cd "${ms}";git reset --hard "remotes/origin/${MS_BR}"
 fi
 set -x
 docker run -ti\
     -v "${ms}":/srv/salt/makina-states\
-    -v "${ms}":/srv/mastersalt/makina-states\
+    -v "${ms}":/makina-states\
     -v "${DATA}":/srv/projects/${name}/data\
     -v "${W}":/srv/projects/${W}/project\
     "${FROM}" "${@}"

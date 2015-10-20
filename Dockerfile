@@ -6,4 +6,4 @@ RUN  cd /srv/projects/registry/project\
      && /srv/projects/registry/project/bin/build.sh
 EXPOSE 80 443
 VOLUME ["/srv/projects/registry/data"]
-CMD ["/srv/projects/registry/project/bin/launch.sh", "indocker", "re_configure=True""]
+CMD ["/srv/projects/registry/project/bin/launch.sh", "indocker", "re_configure=True"]

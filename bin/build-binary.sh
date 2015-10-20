@@ -5,7 +5,7 @@ binary="registry"
 set -ex
 cd "$(dirname $0)/.."
 W="$(pwd)"
-DATA="${W}_data"
+DATA="${DATA:-"${W}_data"}"
 binaries="$W/binaries"
 if [ ! -d "${DATA}/distribution" ];then
     git clone https://github.com/docker/distribution.git "${DATA}/distribution"
