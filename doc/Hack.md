@@ -24,10 +24,12 @@ The image consists in
 	- /docker_auth_service: cesanta/docker_auth
 	- /.*: passthrough to docker registry
 
-Release the binary
----------------------
-This will spawn a docker container, build the binaries into two others and finally upon completness upload binaries to github
+Release the go binaries
+--------------------------
+- Maybe udpate .salt/PILLAR.sample to upgrade/edit the versions of the registry & docker_auth
+- launch the release helper which will spawn a docker container, build the binaries into two others and finally upon completness upload binaries to github.
 <pre>
+$EDITOR .salt/PILLAR.sample
 export GH_USER="<github_username>"
 # notice the initial space to avoid this going into your bash history
  export GH_PASSWORD="<github_password>"
