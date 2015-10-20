@@ -1,8 +1,8 @@
 FROM makinacorpus/makina-states-ubuntu-vivid-stable
-RUN salt-call --local mc_project.init_project registry
-ADD . /srv/projects/registry/project
+ADD .git /srv/projects/registry/project/.git
 RUN  cd /srv/projects/registry/project\
-     && echo FORCE_REBUILD_ID=$(git log -n1 --pretty=format:"%h") \
+     && git reset --hard\
+     && echo FORCE_REBUILD_ID=$(git log -n1 --pretty=format:"%h")\
      && /srv/projects/registry/project/bin/build.sh
 EXPOSE 80 443
 VOLUME ["/srv/projects/registry/data"]

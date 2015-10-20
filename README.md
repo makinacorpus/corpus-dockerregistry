@@ -1,32 +1,49 @@
 Makina-States bases docker registry
 ===================================
-This provides a docker distribution (registry v2) docker image based on
-makina-states.
+This provides a docker distribution (registry v2) docker image based on makina-states.
+This registry embeds a daemon that implements registry V2 tokens, (cesanta/docker_auth).
+The registry won't allow any anonymous configuration.
 
-This registry cooperate with a daemon that implements registry V2 tokens, with the courtesy of cesanta.
-
-The registry wont allow any anonymous configuration
+Code organization
+-------------------
+We separate the project codebase from any persistent daa that it needs and create.
+For this we use two root separates folders, one for the clone, and one for the persistent data.
+By convention, the name of the persistant data holding directory is the name of the clone folder suffixed by "_data".
+Eg if you clone your project inside "/project", the data folder will be /project_data".
+The data folder can't et must not be inside the project folder as we drastically play with unix permissions to ensure proper security and the two of those folders do not have the same policies.
 
 Volumes
 -----------
 You need to add a volume that will contains those subdirs::
 <pre>
 
-   ./configuration:       <- contains the configuration
+   project/                          <- git clone of this repository
+   project_data/configuration:       <- contains persistent data
+   project_data/volume                      <- mounted as the "mc_project" data folder inside the container
+                                               AKA the persistent data folder
+   project_data/volume/configuration:       <- contains the configuration
        pillar.sls:        <- extra registry saltstack configuration
        registry.webaccess <- htpasswd file               (created but empty)
-   ./data/images          <- where the images are stored (autocreated)
-   ./data/www_dir         <- reverse proxy docroot       (autocreated)
+   project_data/volume/data/images          <- where the images are stored (autocreated)
+   project_data/volume/data/www_dir         <- reverse proxy docroot       (autocreated)
 
 </pre>
 
-For convenience, we name **./volume** such a volume in the next section
+
+Download and initialise the layout
+--------------------------------------
+<pre>
+cd $WORKSPACE <- whereever you want to clone the project
+git clone https://github.com/makinacorpus/corpus-dockerregistry.git project
+mkdir project_data
+</pre>
 
 OPTIONAL: Generate a a certificate with a custom authority for test
 ----------------------------------------------------------------------------
 <pre>
+cd $WORKSPACE/project_data
 domain="yourdomain.tld"
-mkdir -p ca volume/configuration
+mkdir -p ca
 openssl genrsa -des3 -out ca/sca-key.pem
 openssl genrsa -des3 -out ca/s${domain}-key.pem
 openssl rsa -in ca/sca-key.pem -out ca/ca-key.pem
@@ -46,14 +63,15 @@ Configure the PILLAR
 -------------------------
 You need then to fill the pillar to setup a domain to serve for the registry (the virtualhost name) and the SSL certificate details
 <pre>
-mkdir -p volume/configuration
+cd $WORKSPACE/project_data
+mkdir -p configuration
 cp .salt/PILLAR.sample volume/configuration/pillar.sls
 sed -re "s/makina-projects.projectname/makina-projects.registry/g" -i volume/configuration/pillar.sls
 $EDITOR volume/configuration/pillar.sls
   -> edit at least:
 
     - domain
-    - certificate key and bundle
+    - certificate key and bundle (content)  (maybe cat project_data/ca/ca/${domain}.bundle.crt && cat ca/${domain}.${domain}-key.pem
     - list of http users and password to allow
     - You can remove what is not overriden if you want.
 </pre>
@@ -88,12 +106,21 @@ makina-projects.registry:
 
 Allow users to connect to the registry
 --------------------------------------
+
+Build & Run
+-------------
+You do not need to Build the image, you can directly download it from the docker-hub.
 <pre>
-htpasswd -cm volume/configuration/registry.webaccess <USER> <PASSWORD>
+docker build -t makinacorpus/registry .
+# or docker pull makinacorpus/registry
+</pre>
+Run
+<pre>
+docker run -d -v "${PWD}_data/volume":/srv/projects/registry/data makinacorpus/registry
 </pre>
 
-Run
----
-<pre>
-docker run -d -v $PWD/volume:/srv/projects/registry/data makinacorpus/registry
-</pre>
+Hack the code of this repository
+---------------------------------
+
+
+

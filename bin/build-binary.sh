@@ -5,11 +5,12 @@ binary="registry"
 set -ex
 cd "$(dirname $0)/.."
 W="$(pwd)"
+DATA="${W}_data"
 binaries="$W/binaries"
-if [ ! -d distribution ];then
-    git clone https://github.com/docker/distribution.git distribution
+if [ ! -d "${DATA}/distribution" ];then
+    git clone https://github.com/docker/distribution.git "${DATA}/distribution"
 fi
-cd distribution
+cd "${DATA}/distribution"
 git pull
 git reset --hard $changeset
 name="docker${binary}registrybuilder$(git log -n1 --pretty=format:"%h")"

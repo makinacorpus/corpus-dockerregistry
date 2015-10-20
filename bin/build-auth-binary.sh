@@ -5,17 +5,18 @@ binary="auth_server"
 set -ex
 cd $(dirname $0)/..
 W="$(pwd)"
-if [ ! -d docker_auth ];then
-    git clone https://github.com/cesanta/docker_auth.git docker_auth
+DATA="${W}_data"
+if [ ! -d $DATA/docker_auth ];then
+    git clone https://github.com/cesanta/docker_auth.git $DATA/docker_auth
 fi
-cd docker_auth
+cd $DATA/docker_auth
 git pull
 git reset --hard $changeset
 name="docker${binary}registrybuilder$(git log -n1 --pretty=format:"%h")"
 sudo docker rm -f "$name" || /bin/true
 sudo docker run --rm --name="$name" \
     -v $PWD:/go/src/github.com/cesanta/docker_auth\
-    -v $W/go:/go\
+    -v $DATA/go:/go\
     -w /go/src/github.com/cesanta/docker_auth/auth_server\
     golang:1.5 make update-deps build
 cd $W
