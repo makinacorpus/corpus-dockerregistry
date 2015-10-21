@@ -73,23 +73,6 @@ Register the certificate to the local openssl configuration
 cp ca/${domain}.bundle.crt /usr/local/share/ca-certificates && update-ca-certificates
 ```
 
-DEVELOPMENT/TEST: Allow a non root user if not root to read & write files
---------------------------------------------------------------------------
-When the volumes will be mounted, the files permissions will certainly changed and chowned to other
-tenant. This is really disturbing in a developement environment as the local user won't then be able to
-edit his own files without gaining root privileges. Any GIT operation or even editing from an IDE will be
-a pain. For this, the idea is to add the user to a special group which has rights on those files.
-
-This relies on posix ACLS that mostly all nowodays sytems support.
-The idea is to rely on a special **editor** group which will be the same inside
-and outside the container
-```bash
-groupadd -r -u 65753 editor
-gpasswd -a $(whoami) editor # replace $(whoami) by the user if it's not the current user
-```
-This user is automatically created in makina-states based images, and it's up to the image maintainer to allow the
-**editor** group to access files in development mode.
-
 Configure the PILLAR
 -------------------------
 You need then to fill the pillar to:
@@ -155,7 +138,6 @@ EOF
 
 Allow users to connect to the registry
 --------------------------------------
-
 Build & Run
 -------------
 ***Be sure to have completed the initial configuration (SSL, PILLAR) before launching the container.***

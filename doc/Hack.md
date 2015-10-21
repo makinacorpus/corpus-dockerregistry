@@ -18,7 +18,6 @@ Table of Contents
       * [Components](#components)
       * [Release the go binaries](#release-the-go-binaries)
 
-
 ## Develop the code of this image
 
 ### The editor group
@@ -36,6 +35,8 @@ The important thing is to share the **gid** (65753).
 sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
 ```
+Although the editor group is automatically created in makina-states based images,<br/>
+it's up to the image maintainer to allow this **group** to access files in development mode (via fixperms.sls).
 
 ### Building the image
 The main thing you want to do with a docker image is to build it.<br/>
@@ -141,8 +142,6 @@ export GH_USER="<github_username>"
 ./bin/release_registry.sh
 ```
 
-
 <!--
 TOC created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
 -->
-
