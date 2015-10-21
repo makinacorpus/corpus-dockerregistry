@@ -81,13 +81,16 @@ And eventually, you certainly want to commit back the changes to your code repos
 ```
 
 ## Maintenance routine
-To cleanup your containers & image from dev work, often do
+To cleanup your containers & images from your busy development work, you must often do:
 ```bash
+# if you do not have dockviz yet
+alias dockviz="docker run --rm -v /var/run/docker.sock:/var/run/docker.sock nate/dockviz"
 dockviz images -t -> remove unused tags with docker rmi $image_id
 wget https://raw.githubusercontent.com/makinacorpus/makina-states/master/docker/cleanup.sh
-chmod +x cleanup.sh
+chmod +x cleanup.sh # remove dangling images, failed & stopped containers, READ ONCE THE SCRIPT !!!
 sudo ./cleanup.sh
 ```
+This will cleanup things and give your again some precious free space.
 
 ## Specific notes for this image
 ### Components
