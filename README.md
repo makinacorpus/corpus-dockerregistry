@@ -157,4 +157,3 @@ docker run -ti\
 Hack this image
 -----------------
 See [doc/Hack.md](doc/Hack.md)
-
