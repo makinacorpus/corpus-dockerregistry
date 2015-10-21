@@ -18,7 +18,7 @@ Hacking notes
 ## A note on makina-states images
 Mostly all makina-states images:
   -  use [circus](https://circus.readthedocs.org/en/latest/) to manage the processes inside the containers
-  -  cron, logrotate & sshd are launched alongside the app processes
+  -  vixie-cron, logrotate & sshd are launched alongside the app processes
   -  sshd do not allow connections by default (no user password, & no keys in authorized_keys)
     
 ## Develop the code of this image
