@@ -59,6 +59,8 @@ docker ps -a
 docker commit $ID adevtag
 # run again your container
 docker run $args -ti adevtag bash
+# in another shell window, untag to save space at next image pruning
+docker rmi adevtag
 ```
 
 #### Method 2: Edit a running container
@@ -76,6 +78,15 @@ sudo docker build -t myfinaltag .
 And eventually, you certainly want to commit back the changes to your code repository from within your host
 ```bash
 # git st && git add . .salt && git commit -am "Finished work" && git push
+```
+
+## Maintenance routine
+To cleanup your containers & image from dev work, often do
+```bash
+dockviz images -t -> remove unused tags with docker rmi $image_id
+wget https://raw.githubusercontent.com/makinacorpus/makina-states/master/docker/cleanup.sh
+chmod +x cleanup.sh
+sudo ./cleanup.sh
 ```
 
 ## Specific notes for this image
