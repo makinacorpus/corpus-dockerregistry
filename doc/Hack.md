@@ -94,15 +94,11 @@ as this would kill your container away.
 
 ### commiting the result back
 When you have finished your work, it's time to test a final rebuild<br/>
-```bash
-sudo docker build -t myfinaltag .
-```
-
 And eventually, you certainly want to commit back the changes to your code repository from within your host
 ```bash
-# git st && git add . .salt && git commit -am "Finished work" && git push
+sudo docker build -t myfinaltag .
+git st && git add . .salt && git commit -am "Finished work" && git push 
 ```
-
 ## Maintenance routine
 To cleanup your containers & images from your busy development work, you must often do:
 ```bash
