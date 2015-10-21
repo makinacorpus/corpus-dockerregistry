@@ -68,6 +68,12 @@ salt-call --local -lall mc_project.deploy yourproject
 ```
 ***NOTE***: the "salt-call" dance is only needed when you changed something to the deployment, you may not have to run it.
 
+#### Get your container IP address
+```bash
+docker ps -a # Get the container IP
+docker inspect -f '{{ .NetworkSettings.IPAddress }}' $id
+```
+
 ##### What to do if the container crashed
 If the container crashed and you want to bring it back to life, it can be tedious as bash is not a daemon<br/>
 The trick is to commit back the container to a tempary image and relaunch it<br/>
