@@ -15,6 +15,12 @@ Hacking notes
     * [Components](#components)
     * [Release the go binaries](#release-the-go-binaries)
 
+## A note on makina-states images
+Mostly all makina-states images:
+  -  use **circus** to manage the processes inside the containers
+  -  cron, logrotate & sshd are launched alongside the app processes
+  -  sshd do not allow connections by default (no user password, & no keys in authorized_keys)
+    
 ## Develop the code of this image
 
 ### The editor group
@@ -91,6 +97,12 @@ docker rmi adevtag
 #### Method 2: Edit a running container
 This is mostly to inspect the running processes and stuff, but you won't be able to kill circus<br/>
 as this would kill your container away.
+```bash
+# find your container ID
+docker ps -a
+# attach a shell to it
+docker run $args -ti $id bash
+```               
 
 ### commiting the result back
 When you have finished your work, it's time to test a final rebuild<br/>
