@@ -7,6 +7,7 @@ To allow file cooperation from inside/out or the container, we use a special edi
 Those files are shared via a docker volumes.
 
 This allows you to:
+
     - develop from outside the container
     - do any git operation from outside
 
