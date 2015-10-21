@@ -1,15 +1,16 @@
 Hacking notes
 ================
 ## Develop the code of this image
+
+### The editor group
 To allow file cooperation from inside/out or the container, we use a special editor group that has access to the most important files of your container.
 
 Those files are shared via a docker volumes.
 
 This allows you to:
- * develop from outside the container, use your IDE, etc.
+ * develop from outside the container, use your IDE, etc, when the container is running.
  * do any git operation from outside
 
-### The editor group
 The editor group must exists on your local machine, and if **editor** already exists, just choose another name.<br/>
 The important thing is to share the **gid** (65753).
 ```bash
