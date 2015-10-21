@@ -10,7 +10,8 @@ This allows you to:
  * develop from outside the container
  * do any git operation from outside
 
-The editor group must exists on your local machine, and if **editor** already exists, just choose another name. The important thing is to share the **gid** (65753).
+The editor group must exists on your local machine, and if **editor** already exists, just choose another name.<br/>
+The important thing is to share the **gid** (65753).
 ```bash
 sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
