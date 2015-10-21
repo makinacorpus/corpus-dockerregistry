@@ -1,9 +1,7 @@
 Hacking notes
 ================
 
-Table of Contents
-=================
-
+## Table of Contents
   * [Hacking notes](#hacking-notes)
     * [Develop the code of this image](#develop-the-code-of-this-image)
       * [The editor group](#the-editor-group)
