@@ -22,7 +22,6 @@ Volumes
 -----------
 You need to add a volume that will contains those subdirs::
 <pre>
-
 project/            <- git clone of this repository, the project code inside the
                        container. this folder contains a '.salt' folder which
                        describe how to install & configure this project.
@@ -39,17 +38,16 @@ project_data/volume/configuration: <- contains the configuration
   registry.webaccess <- htpasswd file               (created but empty)
 project_data/volume/data/images    <- where the images are stored (autocreated)
 project_data/volume/data/www_dir   <- reverse proxy docroot       (autocreated)
-
 </pre>
 
 
 Download and initialise the layout
 --------------------------------------
-<pre>
+```bash
 cd $WORKSPACE <- whereever you want to clone the project
 git clone https://github.com/makinacorpus/corpus-dockerregistry.git project
 mkdir project_data
-</pre>
+```
 
 OPTIONAL: Generate a a certificate with a custom authority for test
 ----------------------------------------------------------------------------
@@ -75,9 +73,29 @@ Register the certificate to the local openssl configuration
 cp ca/${domain}.bundle.crt /usr/local/share/ca-certificates && update-ca-certificates
 ```
 
+DEVELOPMENT/TEST: Allow a non root user if not root to read & write files
+--------------------------------------------------------------------------
+When the volumes will be mounted, the files permissions will certainly changed and chowned to other
+tenant. This is really disturbing in a developement environment as the local user won't then be able to
+edit his own files without gaining root privileges. Any GIT operation or even editing from an IDE will be
+a pain. For this, the idea is to add the user to a special group which has rights on those files.
+
+This relies on posix ACLS that mostly all nowodays sytems support.
+The idea is to rely on a special **editor** group which will be the same inside
+and outside the container
+```bash
+groupadd -r -u 65753 editor
+gpasswd -a $(whoami) editor # replace $(whoami) by the user if it's not the current user
+```
+This user is automatically created in makina-states based images, and it's up to the image maintainer to allow the
+**editor** group to access files in development mode.
+
 Configure the PILLAR
 -------------------------
-You need then to fill the pillar to setup a domain to serve for the registry (the virtualhost name) and the SSL certificate details
+You need then to fill the pillar to:
+  - setup a domain to serve for the registry (the virtualhost name)
+  - the SSL certificate informations
+  - The users ACLS for the registry
 ```bash
 cd $WORKSPACE/project_data
 mkdir -p configuration
@@ -86,6 +104,7 @@ sed -re "s/makina-projects.projectname/makina-projects.registry/g"\
   -i volume/configuration/pillar.sls
 $EDITOR volume/configuration/pillar.sls
 ```
+
 Edit at least:
   - domain
   - certificate key and bundle (content)
@@ -98,7 +117,9 @@ Example configuration/pillar.sls
 ```yaml
 makina-projects.registry:
   data:
+    # the domain serving your registry
     domain: "registryh.docker.tld"
+    # the SSL certicate(incuding the intermediaries)
     ssl_cert: |
         -----BEGIN CERTIFICATE-----
         MIIDMjCCAhoCCQDvVm1SttCzxTANBgkqhkiG9w0BAQsFADBZMQswCQYDVQQGEwJG
@@ -112,6 +133,7 @@ makina-projects.registry:
         S17wzmffRktued3rJ+efBUvegdnbJG1nxT51znLy5mlLAD37OCf2DgqlGyL1UcEr
         XhidyUpZcJ4Fr2koosQZ8z20j2tXDanhbSi1osJ6yQi8rjRdJZeCMwA=
         -----END CERTIFICATE-----
+    # the relevant SSL key
     ssl_key: |
       -----BEGIN RSA PRIVATE KEY-----
       MIIEpQIBAAKCAQEAzzBVPJvbMXFBN1mErd+T3QDUpvI6YvJt3JJjBptvcke1X9Si
@@ -121,7 +143,7 @@ makina-projects.registry:
 ```
 
 DNS configuration
------------------------------
+-------------------
 When your registry container is running and you want to access it locally, just inspect and register it in your /etc/hosts file
 ```bash
 IP=$(sudo docker inspect -f '{{ .NetworkSettings.IPAddress }}' <YOUR_CONTAINER_ID>)
@@ -150,7 +172,7 @@ docker run -ti\
   makinacorpus/registry
 ```
 
-Hack the code of this repository
----------------------------------
+Hack this image
+-----------------
 See [doc/Hack.md](doc/Hack.md)
 
