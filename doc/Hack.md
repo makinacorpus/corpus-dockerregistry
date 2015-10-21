@@ -7,7 +7,7 @@ To allow file cooperation from inside/out or the container, we use a special edi
 Those files are shared via a docker volumes.
 
 This allows you to:
- * develop from outside the container
+ * develop from outside the container, use your IDE, etc.
  * do any git operation from outside
 
 The editor group must exists on your local machine, and if **editor** already exists, just choose another name.<br/>
@@ -16,17 +16,36 @@ The important thing is to share the **gid** (65753).
 sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
 ```
-Secondly, when you know that the build of your image is somewaht stable, you can tag it to speed up future container spawns.<br/>
-This will speed up incremental development.<br/>
-The idea is to build one the image, and then go into the container via a shell a do thinkgs manually until you are happy of the result.<br/>
-You can then commit back you changes to your repo and rebuild from scratch your image without having to rebuild each time you change a single letter.<br/>
 
+Secondly, when you feels that the build of your image is somewhat stable,<br/>
+Build and tag it to speed up future container spawns.<br/>
+This will allows you to hack your code without having to rebuild each time you change a single letter.<br/>
 ```bash
 sudo docker build -t mydevtag .
 ```
 
-Last but not least, now you can launch a container based on this image to hapilly hack the image
+Indeed the idea is to build one the image, and then go into the container<br/>
+via a shell to do daily thinkgs manually until you are happy of the result and ready for a new build.<br/>
 ```bash
+cat Dockerfile # see what's the hell how the image is constructed
+docker run -ti mydevtag bash
+# do something that's needed to make your code happy, from the "mydevtag" checkpoint
+# The next command is supposed to launch manually your app
+/srv/projects/*/bin/launch.sh
+# you can then stop it and hack again and again
+# Since, Repeat, Enjoy
+```
+
+***FROM WITHIN THE HOST***
+
+When you have finished your work, it's time to test a final rebuild<br/>
+```bash
+sudo docker build -t myfinaltag .
+```
+
+And eventually, you certainly want to commit back the changes to your code repository from within your host
+```bash
+# git st && git add . .salt && git commit -am "Finished work" && git push
 ```
 
 Specific notes for this image
