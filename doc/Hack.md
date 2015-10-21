@@ -1,5 +1,6 @@
 Hacking notes
 ================
+
 Table of Contents
 =================
 
@@ -139,3 +140,9 @@ export GH_USER="<github_username>"
  export GH_PASSWORD="<github_password>"
 ./bin/release_registry.sh
 ```
+
+
+<!--
+TOC created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
+-->
+
