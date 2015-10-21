@@ -29,7 +29,8 @@ via a shell to do daily thinkgs manually until you are happy of the result and r
 ```bash
 cat Dockerfile # see what's the hell how the image is constructed
 docker run -ti mydevtag bash
-# do something that's needed to make your code deployment procedure happy, from the "mydevtag" checkpoint
+# do something that's needed to make your code deployment procedure happy
+# from the "mydevtag" checkpoint
 # in makina-states, this is trivial
 salt-call --local -lall mc_project.deploy yourproject
 # The next command is supposed to launch manually your app
