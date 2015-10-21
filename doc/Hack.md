@@ -89,7 +89,6 @@ This is mostly to inspect the running processes and stuff, but you won't be able
 as this would kill your container away.
 
 ### commiting the result back
-***FROM WITHIN THE HOST***<br/>
 When you have finished your work, it's time to test a final rebuild<br/>
 ```bash
 sudo docker build -t myfinaltag .
