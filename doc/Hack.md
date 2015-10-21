@@ -24,13 +24,20 @@ This will allows you to hack your code without having to rebuild each time you c
 ```bash
 sudo docker build -t mydevtag .
 ```
+
 ### Debugging your container, AKA live edit
 #### Method 1: Manual edit (recommended)
-Indeed the idea is to build one the image, and then go into the container<br/>
-via a shell to do daily thinkgs manually until you are happy of the result and ready for a new build.<br/>
+The idea will have to find a "parent" image to test your changes on.<br/>
+In other words, you ll be mostly playing by hand the Dockerfile.<br/>
+This parent image can be either:
+    - The image in the **FROM** Dockerfile statement (eg: makinacorpus/makina-states-ubuntu-vivid-stable)
+    - An image produced by a previous build that you can stage you changes on (eg: mydevtag)
+
+When you replayed the Dockerfile statements, you can go on with any command of your will including launching your app.
+When you are happy of the result, you can then commit your code and test a build from scratch.
 ```bash
 cat Dockerfile # see what's the hell how the image is constructed
-docker run -ti mydevtag bash
+docker run $args -ti mydevtag bash
 # do something that's needed to make your code deployment procedure happy
 # from the "mydevtag" checkpoint
 # in makina-states, this is trivial
@@ -41,6 +48,18 @@ salt-call --local -lall mc_project.deploy yourproject
 # Wash, Since, Repeat, Enjoy
 ```
 ***NOTE***: the "salt-call" dance is only needed when you changed something to the deployment, you may not have to run it.
+
+##### What to do if the container crashed
+If the container crashed and you want to bring it back to life, it can be tedious as bash is not a daemon<br/>
+The trick is to commit back the container to a tempary image and relaunch it<br/>
+```bash
+# find your container ID
+docker ps -a
+# commit it to an image
+docker commit $ID adevtag
+# run again your container
+docker run $args -ti adevtag bash
+```
 
 #### Method 2: Edit a running container
 This is mostly to inspect the running processes and stuff, but you won't be able to kill circus<br/>
