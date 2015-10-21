@@ -69,7 +69,6 @@ as this would kill your container away.
 
 ### commiting the result back
 ***FROM WITHIN THE HOST***
-
 When you have finished your work, it's time to test a final rebuild<br/>
 ```bash
 sudo docker build -t myfinaltag .
