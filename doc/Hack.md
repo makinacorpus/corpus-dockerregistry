@@ -9,6 +9,7 @@ This allows you to:
  * develop from outside the container, use your IDE, etc.
  * do any git operation from outside
 
+### The editor group
 The editor group must exists on your local machine, and if **editor** already exists, just choose another name.<br/>
 The important thing is to share the **gid** (65753).
 ```bash
@@ -16,6 +17,7 @@ sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
 ```
 
+### incremental inspectable image
 Secondly, when you feels that the build of your image is somewhat stable,<br/>
 Build and tag it to speed up future container spawns.<br/>
 This will allows you to hack your code without having to rebuild each time you change a single letter.<br/>
@@ -40,6 +42,7 @@ salt-call --local -lall mc_project.deploy yourproject
 
 ***NOTE***: the "salt-call" dance is only needed when you changed something to the deployment, you may not have to run it.
 
+### commiting the result back
 ***FROM WITHIN THE HOST***
 
 When you have finished your work, it's time to test a final rebuild<br/>
