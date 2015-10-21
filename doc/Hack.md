@@ -142,6 +142,7 @@ $EDITOR .salt/PILLAR.sample
 export GH_USER="<github_username>"
 # notice the initial space to avoid this going into your bash history
  export GH_PASSWORD="<github_password>"
+# final dance
 ./bin/release_registry.sh
 ```
 
