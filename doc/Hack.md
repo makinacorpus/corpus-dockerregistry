@@ -7,9 +7,8 @@ To allow file cooperation from inside/out or the container, we use a special edi
 Those files are shared via a docker volumes.
 
 This allows you to:
-
-    - develop from outside the container
-    - do any git operation from outside
+- develop from outside the container
+- do any git operation from outside
 
 The editor group must exists on your local machine, and if **editor** already exists, just choose another name. The important thing is to share the **gid** (65753).
 ```bash
