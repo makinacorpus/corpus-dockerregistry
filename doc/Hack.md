@@ -17,14 +17,15 @@ sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
 ```
 
-### incremental inspectable image
-Secondly, when you feels that the build of your image is somewhat stable,<br/>
-Build and tag it to speed up future container spawns.<br/>
+### Building the image
+The main thing you want to do with a docker image is to build it.<br/>
+When you feels the build enoughtly stable, you can tag it to speed up future container spawns.<br/>
 This will allows you to hack your code without having to rebuild each time you change a single letter.<br/>
 ```bash
 sudo docker build -t mydevtag .
 ```
-
+### Debugging your container, AKA live edit
+#### Method 1: Manual edit (recommended)
 Indeed the idea is to build one the image, and then go into the container<br/>
 via a shell to do daily thinkgs manually until you are happy of the result and ready for a new build.<br/>
 ```bash
@@ -37,10 +38,13 @@ salt-call --local -lall mc_project.deploy yourproject
 # The next command is supposed to launch manually your app
 /srv/projects/*/bin/launch.sh
 # you can then stop it and hack again and again
-# Since, Repeat, Enjoy
+# Wash, Since, Repeat, Enjoy
 ```
-
 ***NOTE***: the "salt-call" dance is only needed when you changed something to the deployment, you may not have to run it.
+
+#### Method 2: Edit a running container
+This is mostly to inspect the running processes and stuff, but you won't be able to kill circus<br/>
+as this would kill your container away.
 
 ### commiting the result back
 ***FROM WITHIN THE HOST***
