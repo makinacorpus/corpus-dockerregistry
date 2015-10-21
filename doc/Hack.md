@@ -1,7 +1,6 @@
 Hacking notes
 ================
-Develop the code of this image without rebuilding everytime
-------------------------------------------------------------
+= Develop the code of this image without rebuilding everytime =
 To allow file cooperation from inside/out or the container, we use a special editor group that has access to the most important files of your container.
 
 Those files are shared via a docker volumes.
@@ -53,10 +52,8 @@ And eventually, you certainly want to commit back the changes to your code repos
 # git st && git add . .salt && git commit -am "Finished work" && git push
 ```
 
-Specific notes for this image
-------------------------------
-Components
-+++++++++++
+= Specific notes for this image =
+== Components ==
 Shell scripts:
 - a Release module in .salt to release two binaries (see: bin/release_registry.sh)
 	-  one for cesanta/docker_auth (see also: bin/build-auth-binary.sh)
@@ -74,8 +71,7 @@ Salt modules:
 	- registry
 	- docker_auth
 
-Release the go binaries
-+++++++++++++++++++++++
+== Release the go binaries ==
 - Maybe udpate .salt/PILLAR.sample to upgrade/edit the versions of the registry & docker_auth
 - launch the release helper which will spawn a docker container, build the binaries into two others and finally upon completness upload binaries to github.
 ```bash
