@@ -55,6 +55,7 @@ When you replayed the Dockerfile statements, you can go on with any command of y
 When you are happy of the result, you can then commit your code and test a build from scratch.
 ```bash
 cat Dockerfile # see what's the hell how the image is constructed
+               # to copy/paste the steps in your further shell
 docker run $args -ti mydevtag bash
 # do something that's needed to make your code deployment procedure happy
 # from the "mydevtag" checkpoint
