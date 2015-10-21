@@ -36,7 +36,7 @@ sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
 ```
 Although the editor group is automatically created in makina-states based images,<br/>
-it's up to the image maintainer to allow this **group** to access files in development mode (via fixperms.sls).
+it's up to the image maintainer to **allow this group to access files** in development mode (via fixperms.sls).
 
 ### Building the image
 The main thing you want to do with a docker image is to build it.<br/>
