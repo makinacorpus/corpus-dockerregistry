@@ -2,19 +2,18 @@ Hacking notes
 ================
 
 ## Table of Contents
-  * [Hacking notes](#hacking-notes)
-    * [Develop the code of this image](#develop-the-code-of-this-image)
-      * [The editor group](#the-editor-group)
-      * [Building the image](#building-the-image)
-      * [Debugging your container, AKA live edit](#debugging-your-container-aka-live-edit)
-        * [Method 1: Manual edit (recommended)](#method-1-manual-edit-recommended)
-          * [What to do if the container crashed](#what-to-do-if-the-container-crashed)
-        * [Method 2: Edit a running container](#method-2-edit-a-running-container)
-      * [commiting the result back](#commiting-the-result-back)
-    * [Maintenance routine](#maintenance-routine)
-    * [Specific notes for this image](#specific-notes-for-this-image)
-      * [Components](#components)
-      * [Release the go binaries](#release-the-go-binaries)
+  * [Develop the code of this image](#develop-the-code-of-this-image)
+    * [The editor group](#the-editor-group)
+    * [Building the image](#building-the-image)
+    * [Debugging your container, AKA live edit](#debugging-your-container-aka-live-edit)
+      * [Method 1: Manual edit (recommended)](#method-1-manual-edit-recommended)
+        * [What to do if the container crashed](#what-to-do-if-the-container-crashed)
+      * [Method 2: Edit a running container](#method-2-edit-a-running-container)
+    * [commiting the result back](#commiting-the-result-back)
+  * [Maintenance routine](#maintenance-routine)
+  * [Specific notes for this image](#specific-notes-for-this-image)
+    * [Components](#components)
+    * [Release the go binaries](#release-the-go-binaries)
 
 ## Develop the code of this image
 
