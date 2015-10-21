@@ -1,6 +1,6 @@
 Hacking notes
 ================
-## Develop the code of this image without rebuilding everytime
+## Develop the code of this image
 To allow file cooperation from inside/out or the container, we use a special editor group that has access to the most important files of your container.
 
 Those files are shared via a docker volumes.
