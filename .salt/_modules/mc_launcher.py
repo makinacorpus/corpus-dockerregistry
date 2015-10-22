@@ -15,6 +15,18 @@ def encrypt(password, salt=12):
     return bcrypt.hashpw(password, bcrypt.gensalt(12))
 
 
+def sshconfig():
+    '''
+    Try to find ssh keys inside /ms_ssh and allow them to
+    connect as the root user
+    '''
+    if os.path.exits('/ms_ssh'):
+        for i in os.listdir('/ms_ssh'):
+            fp = os.path.join('/ms_ssh', i)
+            if i.startwith('id_') and i.endswith('.pub'):
+                os.system('cat "{0}">>/root/.ssh/authorized_keys'.format(fp))
+
+
 def reconfigure(name=PROJECT):
     '''
     Run everything here that needed to reconf
@@ -22,6 +34,7 @@ def reconfigure(name=PROJECT):
     configuration upon a container boot.
     '''
     _s = __salt__
+
     cfg = _s['mc_project.get_configuration'](name)
     ret = _s['mc_project.deploy'](name,
                                   only='install',
@@ -33,7 +46,7 @@ def reconfigure(name=PROJECT):
     return ret
 
 
-def launch(name=PROJECT, re_configure=False):
+def launch(name=PROJECT, ssh_config=False, re_configure=False):
     '''
     Run what's needed and stop everything
 
@@ -41,6 +54,8 @@ def launch(name=PROJECT, re_configure=False):
     and stopping it and all that it can have left
     behind
     '''
+    if ssh_config:
+        sshconfig()
     if re_configure:
         reconfigure(name=name)
     # this will block here, we launch circus, if this die

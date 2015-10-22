@@ -21,7 +21,7 @@ sudo docker run --rm --name="$name" \
     golang:1.5 make update-deps build
 cd $W
 if [ ! -d binaries ];then mkdir -p binaries;fi
-sudo cp go/bin/${binary} "binaries/${binary}-${changeset}"
+sudo cp $DATA/go/bin/${binary} "binaries/${binary}-${changeset}"
 sudo chown ${user} "binaries/${binary}-${changeset}"
 sudo docker rm -f "$name" || /bin/true
 if [ -f "binaries/${binary}-${changeset}.xz" ];then
