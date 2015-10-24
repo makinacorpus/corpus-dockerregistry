@@ -48,8 +48,11 @@ makina-projects.projectname:
     images: "{data_root}/data/images"
     www_dir: "{data_root}/data/www"
     force_ssl: false
-    changeset: "v2.1.1"
-    auth_changeset: "e3e2d6"
+    binaries:
+      registry:
+        changeset: "v2.1.1"
+      "auth_server":
+        changeset: "e3e2d6"
     configs:
       "registry.yml":
         source: "salt://makina-projects/{name}/files/registry.yml"

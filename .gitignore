@@ -13,3 +13,6 @@ registry-v*.xz.md5
 /docker_auth
 /binaries
 /go
+/auth_server.xz
+/bin/auth_server
+/bin/registry

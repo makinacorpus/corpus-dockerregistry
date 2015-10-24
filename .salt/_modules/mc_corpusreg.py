@@ -92,6 +92,7 @@ def release_binary(gh_url,
                    gh_password,
                    registry_changeset=None,
                    docker_auth_changeset=None,
+                   make=True,
                    upload=True,
                    make_auth_binary=True,
                    make_binary=True):
@@ -102,7 +103,7 @@ def release_binary(gh_url,
         registry_changeset = data['changeset']
     if not docker_auth_changeset:
         docker_auth_changeset = data['auth_changeset']
-    if make_binary:
+    if make and make_binary:
         cret = __salt__['cmd.run_all'](
             '/project/bin/build-binary.sh',
             env={'changeset': registry_changeset})
@@ -110,7 +111,7 @@ def release_binary(gh_url,
             print(cret['stdout'])
             print(cret['stderr'])
             raise ValueError('registry build failed')
-    if make_auth_binary:
+    if make and make_auth_binary:
         cret = __salt__['cmd.run_all'](
             '/project/bin/build-auth-binary.sh',
             env={'changeset': registry_changeset})
@@ -127,7 +128,6 @@ def release_binary(gh_url,
             '/project/binaries/auth_server-{0}.xz'.format(
                 docker_auth_changeset),
             '/project/binaries/auth_server-{0}.xz.md5'.format(
-                docker_auth_changeset),
-        ]
+                docker_auth_changeset)]
         upload_binaries(binaries, gh_url, gh_user, gh_password)
 # vim:set et sts=4 ts=4 tw=80:
