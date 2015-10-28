@@ -41,6 +41,8 @@ makina-projects.projectname:
         to: ["{user}@{fqdn}"]
     host: localhost
     port: 5000
+    auth_address: localhost
+    auth_port: 5004
     conf: "{data_root}/configuration"
     nginx_loglevel: crit
     nginx_upstreams: "salt://makina-projects/{name}/files/nginx.upstreams.conf"
@@ -48,14 +50,46 @@ makina-projects.projectname:
     images: "{data_root}/data/images"
     www_dir: "{data_root}/data/www"
     force_ssl: false
+    auth_server:
+      expiration: 900
+      realm: "https://127.0.0.1:5001/auth"
+      service: "Docker registry"
+      issuer: "Acme auth server"
+      rootcertbundle: "/path/to/server.pem" 
+    users:
+      admin: 
+        password: |
+                  {{salt['mc_utils.generate_stored_password']('corpusregistry')}}
+      readonly: 
+        password: |
+                  {{salt['mc_utils.generate_stored_password']('corpusregistryro')}}
     binaries:
       registry:
         changeset: "v2.1.1"
       "auth_server":
         changeset: "e3e2d6"
+    acl:
+      # Admin has full access to everything.
+      - {match: {account: "admin"}, actions: ["*"]}
+      # User "readonly" can pull stuff.
+      - {match: {account: "readonly"}, actions: ["pull"]}
+      # Access is denied by default.
     configs:
+      "cert.pem":
+        source: "salt://makina-projects/{name}/files/cert.pem"
+        target: "{data_root}/configuration/cert.pem"
+        mode: 640
+
+      "key.pem":
+        source: "salt://makina-projects/{name}/files/key.pem"
+        target: "{data_root}/configuration/key.pem"
+        mode: 640
       "registry.yml":
         source: "salt://makina-projects/{name}/files/registry.yml"
         target: "{data_root}/configuration/registry.yml"
         mode: 640
+      "auth.yml":
+        source: "salt://makina-projects/{name}/files/auth.yml"
+        target: "{data_root}/configuration/auth.yml"
+        mode: 640 
 # vim:set ft=sls et :
