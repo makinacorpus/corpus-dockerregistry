@@ -41,13 +41,13 @@ ${DATA}/registry      <- if binary are built: registry codebase
 For the data, we differentiate in term of permissions the configuration from
 the datas (later is more laxist).
 For the configuration directories, after the image has been launched, you ll
-certainly need to gain root privileges to redit any files in those subdirs.
+certainly need to gain root privileges to re-edit any files in those subdirs.
 
 ***project_data: configuration***
 <pre>
 ${VOLUME}/ssh/*.pub:     <- ssh public keys to allow to connect as root
 ${VOLUME}/configuration: <- contains the configuration
-             |- pillar.sls:    <- configuration file (saltstack pillar) from the image
+             |- pillar.sls:    <- configuration file (saltstack pillar) for the container
 </pre>
 
 ***project_data: data***
