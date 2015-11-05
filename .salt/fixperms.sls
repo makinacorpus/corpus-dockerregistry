@@ -12,19 +12,38 @@
     - contents: |
             #!/usr/bin/env bash
             setfacl -P -R -b -k "{{cfg.project_dir}}"
+            # layout directories belongs to {{cfg.user}}:{{cfg.group}}
             "{{locs.resetperms}}" --no-acls --no-recursive \
                --paths="{{cfg.project_dir}}" \
                --paths="{{cfg.project_dir}}"/.. \
                --paths="{{cfg.project_dir}}"/../.. \
                --dmode '0751' --fmode '0770' \
                --user {{cfg.user}} --group {{cfg.group}};
+            # pillar layout directories belongs to {{cfg.user}}:root
             "{{locs.resetperms}}" --no-acls\
                --paths "{{cfg.pillar_root}}" \
                --dmode '0770' --fmode '0770'  \
                --user {{cfg.user}} --group root;
+            # read only for group: editor
+            # Other is not authorized to access any file
             find \
-              "{{cfg.project_root}}" \
-              "{{cfg.data_root}}" \
+              "{{cfg.data_root}}/ssh" \
+              "{{cfg.data_root}}/configuration" \
+              -type f -or -type d | while read i;do
+                if [ ! -h "${i}" ];then
+                  if [ -d "${i}" ];then
+                    chmod g-s "${i}"
+                    chown {{cfg.user}}:{{cfg.group}} "${i}"
+                    chmod g+rxs-w,o-rwx "${i}"
+                  elif [ -f "${i}" ];then
+                    chown {{cfg.user}}:{{cfg.group}} "${i}"
+                  fi
+                fi
+              done
+            # read/write for group: editor
+            # Other is not authorized to access any file
+            find \
+              "{{cfg.data_root}}/data" \
               "{{cfg.data.www_dir}}" \
               "{{cfg.data.images}}" \
               -type f -or -type d | while read i;do
@@ -32,7 +51,7 @@
                   if [ -d "${i}" ];then
                     chmod g-s "${i}"
                     chown {{cfg.user}}:{{cfg.group}} "${i}"
-                    chmod g+rxs,o-rwx "${i}"
+                    chmod g+rwxs,o-rwx "${i}"
                   elif [ -f "${i}" ];then
                     chown {{cfg.user}}:{{cfg.group}} "${i}"
                   fi

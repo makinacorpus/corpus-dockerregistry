@@ -17,10 +17,11 @@ Hacking notes
 
 ## A note on makina-states images
 Mostly all makina-states based images:
-  -  use [circus](https://circus.readthedocs.org/en/latest/) to manage the processes inside the containers
-  -  vixie-cron, logrotate & sshd are launched alongside the app processes
-  -  sshd do not allow connections by default (no user password, & no keys in authorized_keys)
-    
+  - use [circus](https://circus.readthedocs.org/en/latest/) to manage the processes inside the containers
+  - logrotate to rotate most system logs
+  - vixie-cron, logrotate & sshd are launched alongside the app processes
+  - sshd do not allow connections by default (no user password, & no keys in authorized_keys)
+
 ## Develop the code of this image
 
 ### The editor group
@@ -37,9 +38,10 @@ The important thing is to share the **gid** (65753).
 ```bash
 sudo groupadd -u 65753 editor
 sudo gpasswd -a $(whoami) editor
+newgrp editor # in any opened shell, or reboot(reconnect to a new) your session
 ```
 Although the editor group is automatically created in makina-states based images,<br/>
-it's up to the image maintainer to **allow this group to access files** in development mode (via fixperms.sls).
+it's up to the image maintainer to **allow this group to access files** in development mode (via ``.salt/fixperms.sls``).
 
 ### Building the image
 The main thing you want to do with a docker image is to build it.<br/>
@@ -52,7 +54,7 @@ sudo docker build -t mydevtag .
 ### Debugging your container, AKA live edit
 #### Method 1: Manual edit (recommended)
 The idea will have to find a "parent" image to test your changes on.<br/>
-In other words, you ll be mostly playing by hand the Dockerfile.<br/>
+In other words, you ll be mostly playing by hand the Dockerfile in your docker shell.<br/>
 This parent image can be either:
     - The image in the **FROM** Dockerfile statement (eg: makinacorpus/makina-states-ubuntu-vivid-stable)
     - An image produced by a previous build that you can stage you changes on (eg: mydevtag)
@@ -69,7 +71,6 @@ docker run $args -ti mydevtag bash
 salt-call --local -lall mc_project.deploy yourproject
 # The next command is supposed to launch manually your app
 /srv/projects/*/bin/launch.sh
-# you can then stop it and hack again and again
 # Wash, Since, Repeat, Enjoy
 ```
 ***NOTE***: the "salt-call" dance is only needed when you changed something to the deployment, you may not have to run it.
@@ -102,14 +103,15 @@ as this would kill your container away.
 docker ps -a
 # attach a shell to it
 docker run $args -ti $id bash
-```               
+# from there you can do all what was indicated in the previous steps
+```
 
 ### commiting the result back
 When you have finished your work, it's time to test a final rebuild<br/>
 And eventually, you certainly want to commit back the changes to your code repository from within your host
 ```bash
 sudo docker build -t myfinaltag .
-git st && git add . .salt && git commit -am "Finished work" && git push 
+git st && git add . .salt && git commit -am "Finished work" && git push
 ```
 ## Maintenance routine
 To cleanup your containers & images from your busy development work, you must often do:
@@ -123,36 +125,6 @@ sudo ./cleanup.sh
 ```
 This will cleanup things and give your again some precious free space.
 
-## Specific notes for this image
-### Components
-Shell scripts:
-- a Release module in .salt to release two binaries (see: bin/release_registry.sh)
-	-  one for cesanta/docker_auth (see also: bin/build-auth-binary.sh)
-	-  one for the docker distribution binary (see also: bin/build-binary.sh)
-
-Salt modules:
-- mc_corpusreg.py: helper to release the two go binaries (registry & docker_auth)
-- mc_launcher.py: helper to start the circus daemon which launch all other processes:
-    - nginx reverse proxy to:
-        - /docker_auth_service: cesanta/docker_auth
-        - /.*: passthrough to docker registry
-	- sshd
-	- cron
-	- logrotate
-	- registry
-	- docker_auth
-
-### Release the go binaries
-- Maybe udpate .salt/PILLAR.sample to upgrade/edit the versions of the registry & docker_auth
-- launch the release helper which will spawn a docker container, build the binaries into two others and finally upon completness upload binaries to github.
-```bash
-$EDITOR .salt/PILLAR.sample
-export GH_USER="<github_username>"
-# notice the initial space to avoid this going into your bash history
- export GH_PASSWORD="<github_password>"
-# final dance
-./bin/release_registry.sh
-```
 
 <!--
 TOC created by [gh-md-toc](https://github.com/ekalinin/github-markdown-toc)
