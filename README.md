@@ -91,8 +91,10 @@ cat ca/${DOMAIN}.crt ca.pem > ca/${DOMAIN}.bundle.crt
 
 Register the certificate to the local openssl configuration
 ```bash
-sudo cp "${DATA}/ca/${domain}.bundle.crt /usr/local/share/ca-certificates\
- && sudo update-ca-certificates
+cat | sudo sh << EOF
+cp "${DATA}/ca/${domain}.bundle.crt /usr/local/share/ca-certificates\
+update-ca-certificates
+EOF
 ```
 
 ## Configure the image via the salt PILLAR
