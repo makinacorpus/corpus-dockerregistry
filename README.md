@@ -91,7 +91,8 @@ cat ca/${domain}.crt ca.pem > ca/${domain}.bundle.crt
 
 Register the certificate to the local openssl configuration
 ```bash
-sudo cp "${DATA}/ca/${domain}.bundle.crt /usr/local/share/ca-certificates && sudo update-ca-certificates
+sudo cp "${DATA}/ca/${domain}.bundle.crt /usr/local/share/ca-certificates\
+ && sudo update-ca-certificates
 ```
 
 ## Configure the image via the salt PILLAR
@@ -124,7 +125,7 @@ makina-projects.registry:
       admin:
         password: test1
       readonly:
-        password: test2 
+        password: test2
     acl:
       # Admin has full access to everything.
       - {match: {account: "admin"}, actions: ["*"]}
@@ -183,7 +184,7 @@ cat | sudo sh << EOF
 sed -i -re "/registryh.docker.tld/d" /etc/hosts
 echo $IP registryh.docker.tld>>/etc/hosts
 EOF
-``` 
+```
 
 ## Hack this image
 See:
