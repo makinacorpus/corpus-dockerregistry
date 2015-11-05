@@ -31,17 +31,17 @@
                 if [ ! -h "${i}" ];then
                   if [ -d "${i}" ];then
                     chmod g-s "${i}"
-                    chown {{cfg.user}}:www-data "${i}"
+                    chown {{cfg.user}}:{{cfg.group}} "${i}"
                     chmod g+rxs,o-rwx "${i}"
                   elif [ -f "${i}" ];then
-                    chown {{cfg.user}}:www-data "${i}"
+                    chown {{cfg.user}}:{{cfg.group}} "${i}"
                   fi
                 fi
               done
             "{{locs.resetperms}}" --no-acls \
                --paths "{{cfg.data_root}}/configuration" \
                --dmode '2750' --fmode '0440' \
-               --user "{{cfg.user}}" --group "www-data"
+               --user "{{cfg.user}}" --group {{cfg.group}}
   cmd.run:
     - name: {{cfg.project_dir}}/global-reset-perms.sh
     - cwd: {{cfg.project_root}}

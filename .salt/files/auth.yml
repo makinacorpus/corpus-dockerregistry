@@ -1,17 +1,17 @@
+# generated via salt - do not edit
 {% set cfg = salt['mc_project.get_configuration'](project) %}
 {% set data = cfg.data %}
 # A simple example. See reference.yml for explanation for explanation of all options.
 server:
   addr: "{{data.auth_address}}:{{data.auth_port}}"
-  certificate: "/path/to/server.pem"
-  key: "/path/to/server.key"
 token:
-  issuer: "{{data.domain}} auth server"
-  expiration: "{{data.auth_server.expiration}}"
+  certificate: "{{cfg.data_root}}/configuration/cert.pem"
+  key: "{{cfg.data_root}}/configuration/key.pem"
+  rootcertbundle: "{{cfg.data_root}}/configuration/cert.pem"
+  issuer: "{{data.auth_server.issuer}}"
+  expiration: {{data.auth_server.expiration}}
   realm: "{{data.auth_server.realm}}"
   service: "{{data.auth_server.service}}"
-  issuer: "{{data.auth_server.issuer}}"
-  rootcertbundle: "{{cfg.data_root}}/configuration/cert.pem"
 {% if data.get('users') %}
 users:
 {%for u, udata in data.users.items() %}

@@ -36,6 +36,16 @@ include:
   'warmup_delay': "10",
   'max_age': 24*60*60} %}
 {{ circus.circusAddWatcher(cfg.name+'-registry', **circus_data) }}
+{% set circus_data = {
+  'cmd': '{cfg[project_root]}/bin/auth_server {cfg[data_root]}/configuration/auth.yml'.format(cfg=cfg, data=cfg.data),
+  'environment': {},
+  'uid': cfg.user,
+  'gid': cfg.group,
+  'copy_env': True,
+  'working_dir': cfg.project_root,
+  'warmup_delay': "10",
+  'max_age': 24*60*60} %}
+{{ circus.circusAddWatcher(cfg.name+'-docker-auth', **circus_data) }}
 
 {{cfg.name}}-dirs:
   file.directory:
@@ -59,35 +69,6 @@ include:
     - watch_in:
       - mc_proxy: {{cfg.name}}-configs-post
 
-{{cfg.name}}-htaccess:
-  file.managed:
-    - name: "{{data.htaccess}}"
-    - source: ''
-    - user: www-data
-    - group: www-data
-    - mode: 770
-    - watch:
-      - mc_proxy: {{cfg.name}}-configs-pre
-    - watch_in:
-      - mc_proxy: {{cfg.name}}-configs-post
-
-{% if data.get('http_users', {}) %}
-{% for userrow in data.http_users %}
-{% for user, passwd in userrow.items() %}
-{{cfg.name}}-{{user}}-htaccess:
-  webutil.user_exists:
-    - name: "{{user}}"
-    - password: "{{passwd}}"
-    - htpasswd_file: "{{data.htaccess}}"
-    - options: m
-    - force: true
-    - watch:
-      - file: {{cfg.name}}-htaccess
-    - watch_in:
-      - mc_proxy: {{cfg.name}}-configs-post
-{% endfor %}
-{% endfor %}
-{% endif %}
 {% for config, tdata in data.configs.items() %}
 {{cfg.name}}-{{config}}-conf:
   file.managed:
@@ -127,6 +108,5 @@ include:
 {{cfg.name}}-www-data:
   user.present:
     - name: www-data
-    - optional_groups:
-      - {{cfg.group}}
+    - optional_groups: [{{cfg.group}}]
     - remove_groups: false

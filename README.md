@@ -33,9 +33,9 @@ project_data/volume <- mounted as the persistent data folder inside the containe
 
 ***project_data***
 <pre>
+project_data/volume/ssh/*.pub:     <- ssh public keys to allow to connect as root
 project_data/volume/configuration: <- contains the configuration
   pillar.sls:        <- extra registry saltstack configuration
-  registry.webaccess <- htpasswd file               (created but empty)
 project_data/volume/data/images    <- where the images are stored (autocreated)
 project_data/volume/data/www_dir   <- reverse proxy docroot       (autocreated)
 </pre>

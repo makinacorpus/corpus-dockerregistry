@@ -26,7 +26,6 @@ makina-projects.projectname:
     #ssl_key: |
     #         --- BEGIN
     #         --- END ...
-    htaccess: "{data_root}/configuration/registry.webaccess"
     registry:
       addr: "{host}:{port}"
       debug_addr: "localhost:5001"
@@ -39,9 +38,9 @@ makina-projects.projectname:
           smtp: {}
         from: "{user}@{fqdn}"
         to: ["{user}@{fqdn}"]
-    host: localhost
+    host: 127.0.0.1
     port: 5000
-    auth_address: localhost
+    auth_address: 127.0.0.1
     auth_port: 5004
     conf: "{data_root}/configuration"
     nginx_loglevel: crit
@@ -52,15 +51,14 @@ makina-projects.projectname:
     force_ssl: false
     auth_server:
       expiration: 900
-      realm: "https://127.0.0.1:5001/auth"
-      service: "Docker registry"
-      issuer: "Acme auth server"
-      rootcertbundle: "/path/to/server.pem" 
+      issuer: "{domain}"
+      service: "{domain}"
+      realm: "https://{domain}/authserver/auth"
     users:
-      admin: 
+      admin:
         password: |
                   {{salt['mc_utils.generate_stored_password']('corpusregistry')}}
-      readonly: 
+      readonly:
         password: |
                   {{salt['mc_utils.generate_stored_password']('corpusregistryro')}}
     binaries:
@@ -91,5 +89,5 @@ makina-projects.projectname:
       "auth.yml":
         source: "salt://makina-projects/{name}/files/auth.yml"
         target: "{data_root}/configuration/auth.yml"
-        mode: 640 
+        mode: 640
 # vim:set ft=sls et :

@@ -1,3 +1,4 @@
+# generated via salt - do not edit
 {% set cfg = salt['mc_project.get_configuration'](project) %}
 {% set data = cfg.data %}
 version: 0.1
@@ -48,6 +49,12 @@ http:
       addr: "{{data.registry.debug_addr}}"
     headers:
         X-Content-Type-Options: [nosniff]
+auth:
+  token:
+    realm: "{{data.auth_server.realm}}"
+    service: "{{data.auth_server.service}}"
+    issuer: "{{data.auth_server.issuer}}"
+    rootcertbundle: "{{cfg.data_root}}/configuration/cert.pem"
 redis:
   addr: "localhost:6379"
   password: "{{salt['mc_redis.settings']().redis.requirepass}}"
