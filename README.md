@@ -74,19 +74,19 @@ git clone https://github.com/makinacorpus/corpus-dockerregistry.git "${PROJECT}"
 ### OPTIONNAL: Generate a a certificate with a custom authority for test purposes
 ```bash
 cd "${DATA}"
-domain="yourdomain.tld"
+DOMAIN="registryh.docker.tld"
 mkdir -p ca
 openssl genrsa -des3 -out ca/sca-key.pem
-openssl genrsa -des3 -out ca/s${domain}-key.pem
+openssl genrsa -des3 -out ca/s${DOMAIN}-key.pem
 openssl rsa -in ca/sca-key.pem -out ca/ca-key.pem
-openssl rsa -in ca/s${domain}-key.pem -out ca/${domain}-key.pem
+openssl rsa -in ca/s${DOMAIN}-key.pem -out ca/${DOMAIN}-key.pem
 openssl req -new -x509 -days $((365*30)) -key ca/ca-key.pem -out ca/ca.pem\
   -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=dockerca/"
-openssl req -new -key ca/${domain}-key.pem -out ca/${domain}.csr\
-  -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=*.${domain}/"
-openssl x509 -CAcreateserial -req -days $((365*30)) -in ca/${domain}.csr\
-  -CA ca/ca.pem -CAkey ca-key.pem -out ca/${domain}.crt
-cat ca/${domain}.crt ca.pem > ca/${domain}.bundle.crt
+openssl req -new -key ca/${DOMAIN}-key.pem -out ca/${DOMAIN}.csr\
+  -subj "/C=FR/ST=dockerca/L=dockerca/O=dockerca/CN=*.${DOMAIN}/"
+openssl x509 -CAcreateserial -req -days $((365*30)) -in ca/${DOMAIN}.csr\
+  -CA ca/ca.pem -CAkey ca-key.pem -out ca/${DOMAIN}.crt
+cat ca/${DOMAIN}.crt ca.pem > ca/${DOMAIN}.bundle.crt
 ```
 
 Register the certificate to the local openssl configuration
@@ -178,11 +178,13 @@ docker run -ti\
 ## DNS configuration
 When your registry container is running and you want to access it locally, in development mode,<br/>
 just inspect and register it in your /etc/hosts file
+
+Assuming that you configured the container to respond to ***registryh.docker.tld***.
 ```bash
 IP=$(sudo docker inspect -f '{{ .NetworkSettings.IPAddress }}' <YOUR_CONTAINER_ID>)
 cat | sudo sh << EOF
-sed -i -re "/registryh.docker.tld/d" /etc/hosts
-echo $IP registryh.docker.tld>>/etc/hosts
+sed -i -re "/${DOMAIN}/d" /etc/hosts
+echo $IP ${DOMAIN}>>/etc/hosts
 EOF
 ```
 
