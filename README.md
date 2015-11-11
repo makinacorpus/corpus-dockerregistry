@@ -10,7 +10,7 @@ Other setup will make you go in troubles.<br/>
 You can of course follow the SSL certificate generation snippet bellow.
 
 ## Code organization
-This registry is based via makina-states, a deployment framework based on saltstack.
+This registry is based via makina-states, a deployment framework based on saltstack.<br/>
 Please read this [documentation](http://makina-states.readthedocs.org/usage_docker/images.html#initialise-your-dev-environment)
 
 We separate the project codebase from any persistent data that is needed to be created along any container.<br/>
