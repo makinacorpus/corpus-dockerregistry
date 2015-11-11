@@ -48,7 +48,7 @@ git clone "${REPO_URL}" "${PROJECT}"
 ```
 - [base doc](http://makina-states.readthedocs.org/usage_docker/images.html#download-and-initialize-the-layout) from makina-states
 
-### OPTIONAL: Generate a a certificate with a custom authority for test purposes
+### OPTIONAL: Generate a SSL certificate for test purposes
 - [base doc](http://makina-states.readthedocs.org/usage_docker/images.html#optionnal-generate-a-a-certificate-with-a-custom-authority-for-testing-purposes) from makina-states
 
 ## Configure the image via the salt PILLAR
