@@ -131,6 +131,12 @@ Run
 docker run -ti -v "${VOlUME}":/srv/projects/registry/data makinacorpus/registry
 ```
 
+The image exposes some volumes that you may want to attach In production mode:
+
+    - /srv/projects/registry/data
+    - /var/logs/circus
+    - /var/logs/bind
+
 ## Hack this image
 See:
 - [doc/Hack.md](doc/Hack.md)
