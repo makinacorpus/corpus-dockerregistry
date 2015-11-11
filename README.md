@@ -46,10 +46,10 @@ export VOLUME="${DATA}/volume"          # where you want to put the docker volum
 mkdir -p "${DATA}" "${VOLUME}"
 git clone "${REPO_URL}" "${PROJECT}"
 ```
--> [original doc](http://makina-states.readthedocs.org/usage_docker/images.html#download-and-initialize-the-layout)
+- [base doc](http://makina-states.readthedocs.org/usage_docker/images.html#download-and-initialize-the-layout)
 
 ### OPTIONNAL: Generate a a certificate with a custom authority for test purposes
--> [original doc](http://makina-states.readthedocs.org/usage_docker/images.html#optionnal-generate-a-a-certificate-with-a-custom-authority-for-testing-purposes)
+-> [base doc](http://makina-states.readthedocs.org/usage_docker/images.html#optionnal-generate-a-a-certificate-with-a-custom-authority-for-testing-purposes)
 
 ## Configure the image via the salt PILLAR
 You need then to fill the pillar to:
