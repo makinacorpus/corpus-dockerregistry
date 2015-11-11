@@ -66,6 +66,8 @@ makina-projects.projectname:
         changeset: "v2.1.1"
       "auth_server":
         changeset: "e3e2d6"
+      "docker":
+        changeset: "1.9.0"
     acl:
       # Admin has full access to everything.
       - {match: {account: "admin"}, actions: ["*"]}

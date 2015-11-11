@@ -91,18 +91,23 @@ def release_binary(gh_url,
                    gh_user,
                    gh_password,
                    registry_changeset=None,
+                   docker_changeset=None,
                    docker_auth_changeset=None,
                    make=True,
                    upload=True,
+                   make_docker_binary=True,
                    make_auth_binary=True,
                    make_binary=True):
     cfg = __salt__['mc_utils.sls_load']('/project/.salt/PILLAR.sample')
     cfg = cfg[[a for a in cfg][0]]
     data = cfg['data']
+    bins = data['binaries']
     if not registry_changeset:
-        registry_changeset = data['changeset']
+        registry_changeset = bins['registry']['changeset']
     if not docker_auth_changeset:
-        docker_auth_changeset = data['auth_changeset']
+        docker_auth_changeset = bins['auth_server']['changeset']
+    if not docker_changeset:
+        docker_changeset = data['docker']['changeset']
     if make and make_binary:
         cret = __salt__['cmd.run_all'](
             '/project/bin/build-binary.sh',
@@ -111,6 +116,14 @@ def release_binary(gh_url,
             print(cret['stdout'])
             print(cret['stderr'])
             raise ValueError('registry build failed')
+    if make and make_docker_binary:
+        cret = __salt__['cmd.run_all'](
+            '/project/bin/build-docker.sh',
+            env={'changeset': registry_changeset})
+        if cret['retcode'] != 0:
+            print(cret['stdout'])
+            print(cret['stderr'])
+            raise ValueError('auth registry build failed')
     if make and make_auth_binary:
         cret = __salt__['cmd.run_all'](
             '/project/bin/build-auth-binary.sh',
@@ -121,6 +134,10 @@ def release_binary(gh_url,
             raise ValueError('auth registry build failed')
     if upload:
         binaries = [
+            '/project/binaries/docker-{0}.xz'.format(
+                docker_changeset),
+            '/project/binaries/docker-{0}.xz.md5'.format(
+                docker_changeset),
             '/project/binaries/registry-{0}.xz'.format(
                 registry_changeset),
             '/project/binaries/registry-{0}.xz.md5'.format(
