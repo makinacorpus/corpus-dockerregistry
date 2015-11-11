@@ -128,9 +128,7 @@ docker pull makinacorpus/registry
 ```
 Run
 ```bash
-docker run -ti\
-  -v "${PWD}_data/volume":/srv/projects/registry/data\
-  makinacorpus/registry
+docker run -ti -v "${VOlUME}":/srv/projects/registry/data makinacorpus/registry
 ```
 
 ## Hack this image
