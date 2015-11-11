@@ -48,14 +48,14 @@ git clone "${REPO_URL}" "${PROJECT}"
 ```
 - [base doc](http://makina-states.readthedocs.org/usage_docker/images.html#download-and-initialize-the-layout) from makina-states
 
-### OPTIONNAL: Generate a a certificate with a custom authority for test purposes
+### OPTIONAL: Generate a a certificate with a custom authority for test purposes
 - [base doc](http://makina-states.readthedocs.org/usage_docker/images.html#optionnal-generate-a-a-certificate-with-a-custom-authority-for-testing-purposes) from makina-states
 
 ## Configure the image via the salt PILLAR
 You need then to fill the pillar to:
   - setup a domain to serve for the registry (the virtualhost name)
   - the SSL certificate informations
-  - The users ACLS for the registry, see [official doc](https://github.com/cesanta/docker_auth/blob/master/examples/reference.yml)
+  - The users ACLS for the registry, see [official doc from cesenta](https://github.com/cesanta/docker_auth/blob/master/examples/reference.yml)
 
 ```bash
 mkdir -p "${VOLUME}/configuration"
