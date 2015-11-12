@@ -10,8 +10,6 @@ import logging
 import os
 import re
 import requests
-import time
-import salt.loader
 from requests.auth import HTTPBasicAuth
 
 
@@ -90,16 +88,15 @@ def upload_binaries(binaries,
 def release_binary(gh_url,
                    gh_user,
                    gh_password,
+                   cfgname='registry',
                    registry_changeset=None,
                    docker_changeset=None,
-                   docker_auth_changeset=None,
-                   make=True,
-                   upload=True,
-                   make_docker_binary=True,
-                   make_auth_binary=True,
-                   make_binary=True):
-    cfg = __salt__['mc_utils.sls_load']('/project/.salt/PILLAR.sample')
-    cfg = cfg[[a for a in cfg][0]]
+                   docker_auth_changeset=None,):
+    try:
+        cfg = __salt__['mc_utils.sls_load']('/project/.salt/PILLAR.sample')
+        cfg = cfg[[a for a in cfg][0]]
+    except OSError:
+        cfg = __salt__['mc_project.get_configuration'](cfgname)
     data = cfg['data']
     bins = data['binaries']
     if not registry_changeset:
@@ -107,44 +104,19 @@ def release_binary(gh_url,
     if not docker_auth_changeset:
         docker_auth_changeset = bins['auth_server']['changeset']
     if not docker_changeset:
-        docker_changeset = data['docker']['changeset']
-    if make and make_binary:
-        cret = __salt__['cmd.run_all'](
-            '/project/bin/build-binary.sh',
-            env={'changeset': registry_changeset})
-        if cret['retcode'] != 0:
-            print(cret['stdout'])
-            print(cret['stderr'])
-            raise ValueError('registry build failed')
-    if make and make_docker_binary:
-        cret = __salt__['cmd.run_all'](
-            '/project/bin/build-docker.sh',
-            env={'changeset': registry_changeset})
-        if cret['retcode'] != 0:
-            print(cret['stdout'])
-            print(cret['stderr'])
-            raise ValueError('auth registry build failed')
-    if make and make_auth_binary:
-        cret = __salt__['cmd.run_all'](
-            '/project/bin/build-auth-binary.sh',
-            env={'changeset': registry_changeset})
-        if cret['retcode'] != 0:
-            print(cret['stdout'])
-            print(cret['stderr'])
-            raise ValueError('auth registry build failed')
-    if upload:
-        binaries = [
-            '/project/binaries/docker-{0}.xz'.format(
-                docker_changeset),
-            '/project/binaries/docker-{0}.xz.md5'.format(
-                docker_changeset),
-            '/project/binaries/registry-{0}.xz'.format(
-                registry_changeset),
-            '/project/binaries/registry-{0}.xz.md5'.format(
-                registry_changeset),
-            '/project/binaries/auth_server-{0}.xz'.format(
-                docker_auth_changeset),
-            '/project/binaries/auth_server-{0}.xz.md5'.format(
-                docker_auth_changeset)]
-        upload_binaries(binaries, gh_url, gh_user, gh_password)
+        docker_changeset = bins['docker']['changeset']
+    binaries = [
+        '{1}/binaries/docker-{0}.xz'.format(
+            docker_changeset, cfg['project_root']),
+        '{1}/binaries/docker-{0}.xz.md5'.format(
+            docker_changeset, cfg['project_root']),
+        '{1}/binaries/registry-{0}.xz'.format(
+            registry_changeset, cfg['project_root']),
+        '{1}/binaries/registry-{0}.xz.md5'.format(
+            registry_changeset, cfg['project_root']),
+        '{1}/binaries/auth_server-{0}.xz'.format(
+            docker_auth_changeset, cfg['project_root']),
+        '{1}/binaries/auth_server-{0}.xz.md5'.format(
+            docker_auth_changeset, cfg['project_root'])]
+    upload_binaries(binaries, gh_url, gh_user, gh_password)
 # vim:set et sts=4 ts=4 tw=80:

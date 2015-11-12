@@ -18,7 +18,7 @@ fi
 cat | sudo bash << EOF
 set -ex
 docker rm -f $docker || /bin/true
-docker run --name=$docker --rm --privileged -v "\$(pwd):/go/src/github.com/docker/docker"   docker hack/make.sh binary ubuntu
+docker run --name=$docker --rm --privileged -v "\$(pwd):/go/src/github.com/docker/docker" docker hack/make.sh binary ubuntu
 binaryp=\$(readlink -f bundles/${changeset}/binary/docker)
 if [ ! -d $binaries ];then mkdir -p $binaries;fi
 if [ -f "$binaries/${binary}-${changeset}.xz" ];then
@@ -28,6 +28,6 @@ cp "\${binaryp}" "$binaries/${binary}-${changeset}"
 xz -v -9e -z "$binaries/${binary}-${changeset}"
 md5sum "$binaries/${binary}-${changeset}.xz" > "$binaries/${binary}-${changeset}.xz.md5"
 chown -Rf ${user} $binaries $W/.git
+
 EOF
-echo "finished"
 # vim:set et sts=4 ts=4 tw=80:
